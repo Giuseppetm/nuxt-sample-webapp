@@ -1,0 +1,30 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+@import "./fonts.scss";
+
+body, html {
+    color: #151515;
+    background: #f1f1f1;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(250, 250, 250, 1) 61%, rgba(231, 231, 231, 1) 100%);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-family: 'Switzer';
+    font-weight: 500;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    font-size: clamp(56px, 6vw + 2.5rem, 114px);
+    line-height: 90px;
+    font-weight: 600;
+
+    @screen md {
+        line-height: 120px;
+    }
+}

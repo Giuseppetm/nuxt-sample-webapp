@@ -26,7 +26,7 @@ export default defineNuxtConfig({
   typescript: {
     typeCheck: true
   },
-  css: ['~/assets/css/main.css'],
+  css: ['~/assets/css/main.scss'],
   postcss: {
     plugins: {
       tailwindcss: {},
