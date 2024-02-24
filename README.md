@@ -1,75 +1,28 @@
-# Nuxt 3 Minimal Starter
+# Iliad Webapp
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+La data limite per la consegna del test è il 08/03
 
-## Setup
+TASK
 
-Make sure to install the dependencies:
+Stack: VueJS + un Vue Framework a scelta (es: NuxtJS) + una UI library a scelta (es: Vuetify)
 
-```bash
-# npm
-npm install
+Con lo stack suggerito realizzare una web app con le seguenti pagine:
 
-# pnpm
-pnpm install
+- Login
+- Registrazione utente (Nome, Cognome, Data nascita, Città nascita, Codice Fiscale, ecc.)
+- Form indirizzo di spedizione
+- Tabella con operazioni CRUD sugli elementi e ricerca server side
 
-# yarn
-yarn install
+Per l’integrazione/consumo di Rest API utilizzare servizi fake API a piacimento (es: <https://dummyjson.com/>)
 
-# bun
-bun install
-```
+Come anticipato l’obbiettivo è la realizzazione di un’app che sia graficamente piacevole e fruibile da qualsiasi dispositivo focalizzandosi sugli aspetti FE.
 
-## Development Server
+OPZIONALE:
 
-Start the development server on `http://localhost:3000`:
+- Integrazione di un JavaScript Testing Framework e.g. cypress
 
-```bash
-# npm
-npm run dev
+Terminato il test procedi con l’inviare il necessario per eseguire l’app. Potrebbe essere un file zip o un repo github privato da condividere con all’interno il necessario i.e. istruzioni per il run/dockerfile e docker-compose.
 
-# pnpm
-pnpm run dev
+Sentiti libero di approfondire/integrare nel test quello che desideri e dare libero sfogo alla tua creatività.
 
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+Per qualsiasi dubbio o necessità non esitare a contattarmi.

@@ -26,6 +26,13 @@ export default defineNuxtConfig({
   typescript: {
     typeCheck: true
   },
+  css: ['~/assets/css/main.css'],
+  postcss: {
+    plugins: {
+      tailwindcss: {},
+      autoprefixer: {},
+    },
+  },
   runtimeConfig: {
     apiSecret: '123', // The private keys which are only available server-side
     public: { // Keys within public are also exposed client-side
