@@ -8,7 +8,8 @@ const customTheme: ThemeDefinition = {
     dark: false,
     colors: {
         text: '#151515',
-        secondary: '#c5c5c5',
+        secondary: '#656565',
+        tertiary: '#c5c5c5',
         primary: '#4734F6',
         error: '#B00020',
         info: '#2196F3',

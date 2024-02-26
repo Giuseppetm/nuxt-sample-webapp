@@ -1,7 +1,7 @@
 <template>
     <section class="homepage container mx-auto my-20">
         <h1>
-            This is a simple web application with a few behaviours.
+            This is a simple web application with a few features.
         </h1>
     </section>
 </template>

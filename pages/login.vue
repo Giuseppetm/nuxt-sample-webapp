@@ -2,52 +2,65 @@
   <section class="login container mx-auto my-20">
     <div class="max-w-screen-lg mb-20">
       <h1>
-        To continue you must <span class="text-secondary">log in</span>.
+        To continue you must <span class="text-tertiary">log in</span>.
       </h1>
     </div>
 
     <div class="max-w-screen-xs">
-      <v-form @submit.prevent="handleSubmit" class="mb-6">
-        <v-text-field v-model="email" :rules="emailRules" label="E-mail" placeholder="Insert your e-mail"
-          variant="outlined" />
-        <v-text-field v-model="password" :rules="passwordRules" label="Password" placeholder="Insert your password"
-          variant="outlined" />
-        <v-btn type="submit" variant="outlined" color="primary" block class="mt-2">Login</v-btn>
-      </v-form>
-      <span>To create a new account <NuxtLink class="text-primary" to="/registration">click here</NuxtLink>.</span>
+      <form class="mb-6">
+        <v-text-field v-model="state.email" :error-messages="v$.email.$errors.map((e: any) => e.$message)" label="E-mail"
+          class="mb-2" placeholder="Insert your e-mail" variant="outlined" @input="v$.email.$touch" @blur="v$.email.$touch" required />
+        <v-text-field v-model="state.password" :error-messages="v$.password.$errors.map((e: any) => e.$message)"
+          label="Password" placeholder="Insert your password" variant="outlined" @input="v$.password.$touch"
+          @blur="v$.password.$touch" required />
+        <v-btn variant="outlined" block text="Login" class="mt-2" @click="handleLogin" />
+      </form>
+      <span class="text-secondary">To create a new account <NuxtLink class="text-primary" to="/registration">click here
+        </NuxtLink>.</span>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
+import { useVuelidate } from '@vuelidate/core';
+import { email, helpers, required } from '@vuelidate/validators';
+
 definePageMeta({
   layout: 'default'
 });
 
-const email = ref<string>("");
-const password = ref<string>("");
+interface FormState {
+  email: string,
+  password: string
+};
+
+const rules = {
+  email: { required: helpers.withMessage("E-mail is required.", required), email },
+  password: { required: helpers.withMessage("Password is required.", required) }
+};
+
+const initialState: FormState = {
+  email: '',
+  password: ''
+};
+
+const state = reactive<FormState>({
+  ...initialState,
+});
+
+const v$ = useVuelidate(rules, state);
 
 const loading = ref(false);
 
-const emailRules = [
-  (value: string) => {
-    if (/^[a-z.-]+@[a-z.-]+\.[a-z]+$/i.test(value)) return true
-    return 'You must enter a valid e-mail.'
-  },
-];
-
-const passwordRules = [
-  (value: string) => {
-    if (value) return true
-    return 'You must enter a password.'
-  },
-];
-
-const handleSubmit = async () => {
-  if (!email.value || !password.value) return;
-
+const handleLogin = () => {
   loading.value = true;
-  loading.value = false;
-  await navigateTo('/')
+  
+  v$.value.$validate().then(async(res) => {
+    if (res) {
+      console.log(res)
+      loading.value = false;
+      await navigateTo('/');
+    }
+  });
 };
 </script>
