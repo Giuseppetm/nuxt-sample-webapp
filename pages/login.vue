@@ -29,13 +29,18 @@ definePageMeta({
   layout: 'default'
 });
 
+const store = useStore();
+
 interface FormState {
   email: string,
   password: string
 };
 
 const rules = {
-  email: { required: helpers.withMessage("E-mail is required.", required), email },
+  email: { 
+    required: helpers.withMessage("E-mail is required.", required), 
+    email: helpers.withMessage("E-mail is not valid.", email) 
+  },
   password: { required: helpers.withMessage("Password is required.", required) }
 };
 
@@ -58,8 +63,10 @@ const handleLogin = () => {
   v$.value.$validate().then(async(res) => {
     if (res) {
       console.log(res)
+      store.login();
       loading.value = false;
       await navigateTo('/');
+      // TODO: Successfull login snackbar
     }
   });
 };

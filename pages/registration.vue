@@ -71,7 +71,10 @@ const state = reactive<FormState>({
 const rules = {
     name: { required: helpers.withMessage("Name is required.", required) },
     surname: { required: helpers.withMessage("Surname is required.", required) },
-    email: { required: helpers.withMessage("E-mail is required.", required), email },
+    email: {
+        required: helpers.withMessage("E-mail is required.", required),
+        email: helpers.withMessage("E-mail is not valid.", email)
+    },
     password: { required: helpers.withMessage("Password is required.", required) },
     confirmPassword: { 
         required: helpers.withMessage("You must confirm your password.", required), 
