@@ -17,7 +17,7 @@
 
                     <v-divider class="my-2" />
 
-                    <v-btn variant="text" block>
+                    <v-btn variant="text" block @click="openDeliveryAddresses">
                         Edit delivery address
                     </v-btn>
                     <v-divider class="my-1" />
@@ -31,12 +31,18 @@
 </template>
 
 <script setup lang="ts">
+import { EventType, emitter } from '@/utils/eventBus';
+
 const store = useStore();
 
 const user = {
     initials: 'JD',
     fullName: 'John Doe',
     email: 'john.doe@doe.com',
+};
+
+const openDeliveryAddresses = () => {
+    emitter.emit(EventType.OPEN_DELIVERY_ADDRESSES);
 };
 
 const handleLogout = () => {

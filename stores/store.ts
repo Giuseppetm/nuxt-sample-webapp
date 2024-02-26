@@ -1,10 +1,14 @@
+import type { DeliveryAddress } from "~/utils/models";
+
 interface State {
-    isAuthenticated: boolean
+    isAuthenticated: boolean,
+    deliveryAddress: DeliveryAddress | null
 };
 
 export const useStore = defineStore('store', {
     state: (): State => ({
-        isAuthenticated: false
+        isAuthenticated: false,
+        deliveryAddress: null
     }),
     getters: {},
     actions: {
@@ -13,6 +17,9 @@ export const useStore = defineStore('store', {
         },
         logout() {
             this.isAuthenticated = false;
+        },
+        setDeliveryAddress(address: DeliveryAddress) {
+            this.deliveryAddress = address;
         }
     }
 });

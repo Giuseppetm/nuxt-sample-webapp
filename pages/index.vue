@@ -4,6 +4,8 @@
             This is a simple web application with a few features.
         </h1>
     </section>
+
+    <DeliveryAddress/>
 </template>
 
 <script setup lang="ts">

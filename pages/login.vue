@@ -13,7 +13,7 @@
         <v-text-field v-model="state.password" :error-messages="v$.password.$errors.map((e: any) => e.$message)"
           label="Password" placeholder="Insert your password" variant="outlined" @input="v$.password.$touch"
           @blur="v$.password.$touch" required />
-        <v-btn variant="outlined" block text="Login" class="mt-2" @click="handleLogin" />
+        <v-btn color="primary" block text="Login" class="mt-2" @click="handleLogin" />
       </form>
       <span class="text-secondary">To create a new account <NuxtLink class="text-primary" to="/registration">click here
         </NuxtLink>.</span>

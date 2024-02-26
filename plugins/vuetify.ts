@@ -1,5 +1,4 @@
 import '@mdi/font/css/materialdesignicons.css';
-
 import 'vuetify/styles';
 import { createVuetify, type ThemeDefinition } from 'vuetify';
 import { aliases, mdi } from 'vuetify/iconsets/mdi-svg';
@@ -34,5 +33,6 @@ export default defineNuxtPlugin((app) => {
             }
         }
     });
+    
     app.vueApp.use(vuetify);
 });

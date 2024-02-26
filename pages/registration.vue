@@ -28,11 +28,12 @@
                         placeholder="Confirm your password" variant="outlined" @input="v$.confirmPassword.$touch"
                         @blur="v$.confirmPassword.$touch" required />
                 </div>
-                <v-btn variant="outlined" block text="Register" class="mt-2" @click="handleRegistration" />
+                <v-btn color="primary" block text="Register" class="mt-2" @click="handleRegistration" />
             </form>
-            <span class="text-secondary">If you already have an account <NuxtLink class="text-primary" to="/login">click
-                    here</NuxtLink> to
-                login.</span>
+            <span class="text-secondary">
+                If you already have an account 
+                <NuxtLink class="text-primary" to="/login">click here</NuxtLink> to login.
+            </span>
         </div>
     </section>
 </template>
@@ -76,9 +77,9 @@ const rules = {
         email: helpers.withMessage("E-mail is not valid.", email)
     },
     password: { required: helpers.withMessage("Password is required.", required) },
-    confirmPassword: { 
-        required: helpers.withMessage("You must confirm your password.", required), 
-        sameAs: helpers.withMessage("Confirmation password does not match the password.", sameAs(computed(() => state.password))) 
+    confirmPassword: {
+        required: helpers.withMessage("You must confirm your password.", required),
+        sameAs: helpers.withMessage("Confirmation password does not match the password.", sameAs(computed(() => state.password)))
     },
 };
 
@@ -89,7 +90,7 @@ const loading = ref(false);
 const handleRegistration = () => {
     loading.value = true;
 
-    v$.value.$validate().then(async(res) => {
+    v$.value.$validate().then(async (res) => {
         if (res) {
             console.log(res)
             loading.value = false;

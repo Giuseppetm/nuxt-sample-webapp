@@ -11,7 +11,8 @@ export default defineNuxtConfig({
         config.plugins.push(vuetify({ autoImport: true }))
       })
     },
-    '@pinia/nuxt'
+    '@pinia/nuxt',
+    '@nuxt/image'
   ],
   pinia: {
     storesDirs: ['./stores/**'],
@@ -29,7 +30,9 @@ export default defineNuxtConfig({
   typescript: {
     typeCheck: true
   },
-  css: ['~/assets/css/main.scss'],
+  css: [
+    '~/assets/css/main.scss'
+  ],
   postcss: {
     plugins: {
       tailwindcss: {},

@@ -28,3 +28,13 @@ h1 {
         line-height: 120px;
     }
 }
+
+h2 {
+    font-weight: 600;
+    font-size: 24px;
+
+    @screen md {
+        font-size: 40px;
+        line-height: 54px;
+    }
+}
