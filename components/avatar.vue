@@ -18,7 +18,7 @@
                     <v-divider class="my-2" />
 
                     <v-btn variant="text" block @click="openDeliveryAddresses">
-                        Edit delivery address
+                        Delivery address
                     </v-btn>
                     <v-divider class="my-1" />
                     <v-btn variant="text" block @click="handleLogout">

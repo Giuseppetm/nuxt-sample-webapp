@@ -10,7 +10,7 @@
       <form class="mb-6">
         <v-text-field v-model="state.email" :error-messages="v$.email.$errors.map((e: any) => e.$message)" label="E-mail"
           class="mb-2" placeholder="Insert your e-mail" variant="outlined" @input="v$.email.$touch" @blur="v$.email.$touch" required />
-        <v-text-field v-model="state.password" :error-messages="v$.password.$errors.map((e: any) => e.$message)"
+        <v-text-field v-model="state.password" type="password" :error-messages="v$.password.$errors.map((e: any) => e.$message)"
           label="Password" placeholder="Insert your password" variant="outlined" @input="v$.password.$touch"
           @blur="v$.password.$touch" required />
         <v-btn color="primary" block text="Login" class="mt-2" @click="handleLogin" />

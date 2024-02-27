@@ -20,10 +20,11 @@
                     <v-text-field v-model="state.email" :error-messages="v$.email.$errors.map((e: any) => e.$message)"
                         label="E-mail" class="mb-2" placeholder="Insert your e-mail" variant="outlined"
                         @input="v$.email.$touch" @blur="v$.email.$touch" required />
-                    <v-text-field v-model="state.password" :error-messages="v$.password.$errors.map((e: any) => e.$message)"
-                        label="Password" placeholder="Insert your password" variant="outlined" @input="v$.password.$touch"
+                    <v-text-field v-model="state.password" type="password"
+                        :error-messages="v$.password.$errors.map((e: any) => e.$message)" label="Password"
+                        placeholder="Insert your password" variant="outlined" @input="v$.password.$touch"
                         @blur="v$.password.$touch" required />
-                    <v-text-field v-model="state.confirmPassword"
+                    <v-text-field v-model="state.confirmPassword" type="password"
                         :error-messages="v$.confirmPassword.$errors.map((e: any) => e.$message)" label="Confirm password"
                         placeholder="Confirm your password" variant="outlined" @input="v$.confirmPassword.$touch"
                         @blur="v$.confirmPassword.$touch" required />
@@ -31,7 +32,7 @@
                 <v-btn color="primary" block text="Register" class="mt-2" @click="handleRegistration" />
             </form>
             <span class="text-secondary">
-                If you already have an account 
+                If you already have an account
                 <NuxtLink class="text-primary" to="/login">click here</NuxtLink> to login.
             </span>
         </div>

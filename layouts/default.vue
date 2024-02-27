@@ -11,6 +11,12 @@
         </div>
     </header>
     <slot />
+
+    <footer v-if="store.isAuthenticated">
+        <div class="container mx-auto my-10 text-end">
+            <span>Created by Giuseppe Del Campo</span>
+        </div>
+    </footer>
 </template>
 
 <script setup lang="ts">

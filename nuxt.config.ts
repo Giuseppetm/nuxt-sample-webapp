@@ -40,9 +40,8 @@ export default defineNuxtConfig({
     },
   },
   runtimeConfig: {
-    apiSecret: '123', // The private keys which are only available server-side
-    public: { // Keys within public are also exposed client-side
-      apiBase: '/api'
+    public: { 
+      apiBase: 'https://dummyjson.com'
     }
   }
 });

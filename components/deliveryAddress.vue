@@ -36,7 +36,7 @@
             </div>
           </form>
         </div>
-        <div v-else class="md:grid md:grid-cols-6">
+        <div v-else class="md:grid md:grid-cols-6 max-w-screen-xs m-auto">
           <v-list lines="two" class="md:col-span-4 col-span-6">
             <v-list-item
               :title="state.city"
@@ -47,10 +47,10 @@
                 </v-avatar>
               </template>
 
-              <v-list-subtitle class="text-secondary">
+              <template v-slot:subtitle>
                 {{ state.address }}
                 <template v-if="state.note">- {{ state.note }}</template>
-              </v-list-subtitle>
+              </template>
             </v-list-item>
           </v-list>
           <div class="md:col-span-2 col-span-6 d-flex align-center justify-end">
@@ -101,11 +101,10 @@ const loading = ref(false);
 const handleSave = () => {
   loading.value = true;
 
-  v$.value.$validate().then(async (res) => {
+  v$.value.$validate().then(async(res) => {
     if (res) {
       if (editMode) editMode.value = false;
 
-      console.log(res)
       store.setDeliveryAddress(state);
       loading.value = false;
     }
