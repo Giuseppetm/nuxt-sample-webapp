@@ -14,12 +14,15 @@
           <h2 class="mb-2">
             Manage your delivery address
           </h2>
-          <span>
+          <span v-if="!store.deliveryAddress">
             You have not inserted a delivery address yet, compile the form below.
+          </span>
+          <span v-if="editMode">
+            Insert a new delivery address
           </span>
         </div>
 
-        <div v-if="!store.deliveryAddress">
+        <div v-if="!store.deliveryAddress || editMode">
           <form class="max-w-screen-xs m-auto">
             <v-text-field v-model="state.city" :error-messages="v$.city.$errors.map((e: any) => e.$message)" label="City"
               placeholder="Insert your city" variant="outlined" @input="v$.city.$touch" @blur="v$.city.$touch" required />
@@ -29,12 +32,35 @@
             <v-textarea v-model="state.note" label="Notes (optional)" placeholder="Insert eventual notes" variant="outlined"
               @input="v$.note.$touch" @blur="v$.note.$touch" required />
             <div class="d-flex justify-end">
-              <v-btn :prepend-icon="mdiCheck" color="primary" text="Save address" @click="handleSave" />
+              <v-btn :prepend-icon="mdiCheck" color="success" text="Save address" @click="handleSave" />
             </div>
           </form>
         </div>
-        <div v-else>
-          Address saved
+        <div v-else class="md:grid md:grid-cols-6">
+          <v-list lines="two" class="md:col-span-4 col-span-6">
+            <v-list-item
+              :title="state.city"
+            >
+              <template v-slot:prepend>
+                <v-avatar color="orange">
+                  <v-icon color="white" :icon="mdiHome" />
+                </v-avatar>
+              </template>
+
+              <v-list-subtitle class="text-secondary">
+                {{ state.address }}
+                <template v-if="state.note">- {{ state.note }}</template>
+              </v-list-subtitle>
+            </v-list-item>
+          </v-list>
+          <div class="md:col-span-2 col-span-6 d-flex align-center justify-end">
+            <v-btn
+              :prepend-icon="mdiPencil"
+              text="Edit address"
+              variant="text"
+              @click="handleEdit"
+            />
+          </div>
         </div>
       </v-card-text>
     </v-card>
@@ -42,12 +68,14 @@
 </template>
 
 <script setup lang="ts">
-import { mdiCheck, mdiClose } from '@mdi/js';
+import { mdiCheck, mdiClose, mdiHome, mdiPencil } from '@mdi/js';
 import { useVuelidate } from '@vuelidate/core';
 import { helpers, required } from '@vuelidate/validators';
 import type { DeliveryAddress } from '~/utils/models';
 
 const store = useStore();
+
+const editMode = ref(false);
 
 const rules = {
   city: { required: helpers.withMessage("Address is required.", required) },
@@ -75,11 +103,17 @@ const handleSave = () => {
 
   v$.value.$validate().then(async (res) => {
     if (res) {
+      if (editMode) editMode.value = false;
+
       console.log(res)
       store.setDeliveryAddress(state);
       loading.value = false;
     }
   });
+};
+
+const handleEdit = () => {
+  editMode.value = true;
 };
 
 emitter.on(EventType.OPEN_DELIVERY_ADDRESSES, () => {

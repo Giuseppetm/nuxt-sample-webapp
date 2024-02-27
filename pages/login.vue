@@ -15,8 +15,7 @@
           @blur="v$.password.$touch" required />
         <v-btn color="primary" block text="Login" class="mt-2" @click="handleLogin" />
       </form>
-      <span class="text-secondary">To create a new account <NuxtLink class="text-primary" to="/registration">click here
-        </NuxtLink>.</span>
+      <span class="text-secondary">To create a new account <NuxtLink class="text-primary" to="/registration">click here</NuxtLink>.</span>
     </div>
   </section>
 </template>
