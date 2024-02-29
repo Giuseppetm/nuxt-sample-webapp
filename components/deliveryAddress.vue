@@ -71,7 +71,7 @@
 import { mdiCheck, mdiClose, mdiHome, mdiPencil } from '@mdi/js';
 import { useVuelidate } from '@vuelidate/core';
 import { helpers, required } from '@vuelidate/validators';
-import type { DeliveryAddress } from '~/utils/models';
+import type { DeliveryAddress } from '~/utils/types';
 
 const store = useStore();
 
@@ -115,7 +115,7 @@ const handleEdit = () => {
   editMode.value = true;
 };
 
-emitter.on(EventType.OPEN_DELIVERY_ADDRESSES, () => {
+emitter.on(EventType.OPEN_DELIVERY_ADDRESS, () => {
   dialog.value = true;
 });
 </script>

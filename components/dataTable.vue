@@ -19,9 +19,13 @@
 
             <v-divider />
 
-            <v-data-table :items="items" :loading="loading">
+            <v-data-table :items="items" :loading="pending">
                 <template v-slot:no-data>
-                    <span v-if="!loading">No data available</span>
+                    <span>No data available</span>
+                </template>
+
+                <template v-slot:loading>
+                    <v-skeleton-loader type="table-row@3"></v-skeleton-loader>
                 </template>
 
                 <template v-slot:item.id="{ item }">
@@ -54,8 +58,11 @@
                 </template>
 
                 <template v-slot:item.rating="{ item }">
-                    <v-rating :model-value="item.rating" color="orange-darken-2" density="compact" size="small"
-                        readonly />
+                    <v-rating :model-value="item.rating" color="orange-darken-2" density="compact" size="small" readonly />
+                </template>
+
+                <template v-slot:item.actions="{ item }">
+                    Dennis {{ item.id }}
                 </template>
             </v-data-table>
         </v-card>
@@ -64,49 +71,58 @@
 
 <script setup lang="ts">
 import { mdiMagnify, mdiPlus } from '@mdi/js';
-import type { Model } from '~/utils/models';
+import { useDebounceFn } from '@vueuse/core';
+import type { Model } from '~/utils/types';
 import axios from 'axios';
 
 const runtimeConfig = useRuntimeConfig();
 
-const items = ref<Array<Model>>([]);
 const search = ref<string>('');
-const loading = ref<boolean>(false);
+const debouncedSearch = ref<string>('');
+const debounceTime = 500;
+
+const debouncedSearchHandler = useDebounceFn((value: string) => {
+    debouncedSearch.value = value;
+}, debounceTime);
+
+watch(search, (newValue) => {
+    debouncedSearchHandler(newValue);
+});
+
+const { data, pending, error } = useAsyncData('products', async () => {
+    try {
+        const response = await axios.get(`${runtimeConfig.public.apiBase}/products${search.value && `/search?q=${search.value}`}`);
+        return response.data.products.map((p: any) => {
+            return {
+                id: p.id,
+                title: p.title,
+                description: p.description,
+                discountPercentage: p.discountPercentage,
+                price: p.price,
+                rating: p.rating
+            }
+        });
+    } catch (err) {
+        // TODO: Error snackbar
+        console.error('Errore durante il recupero dei dati:', err);
+    }
+}, { watch: [debouncedSearch] });
+
+const items = computed<Array<Model>>(() => data.value);
+
+const operationType = ref<'create' | 'edit' | 'delete'>();
 
 const handleCreateElement = () => {
+    operationType.value = 'create';
 };
 
 const handleEditElement = (productId: number) => {
+    operationType.value = 'edit';
 };
 
 const handleDeleteElement = (productId: number) => {
+    operationType.value = 'delete';
 };
-
-const handleSearch = () => {
-    // TODO: Search with debouncing
-};
-
-onMounted(async() => {
-    loading.value = true;
-
-    try {
-        const response = await axios.get(`${runtimeConfig.public.apiBase}/products`);
-
-        items.value = response.data.products.map((p: any) => { return {
-            id: p.id,
-            title: p.title,
-            description: p.description,
-            discountPercentage: p.discountPercentage,
-            price: p.price,
-            rating: p.rating
-        }});
-    } catch (error) {
-        // TODO: Snackbar
-        console.error(error);
-    } finally {
-        loading.value = false;
-    }
-});
 </script>
 
 <style lang="scss">

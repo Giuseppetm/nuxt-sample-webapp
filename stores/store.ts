@@ -1,4 +1,4 @@
-import type { DeliveryAddress } from "~/utils/models";
+import type { DeliveryAddress } from "~/utils/types";
 
 interface State {
     isAuthenticated: boolean,

@@ -42,7 +42,7 @@ const user = {
 };
 
 const openDeliveryAddresses = () => {
-    emitter.emit(EventType.OPEN_DELIVERY_ADDRESSES);
+    emitter.emit(EventType.OPEN_DELIVERY_ADDRESS);
 };
 
 const handleLogout = () => {
