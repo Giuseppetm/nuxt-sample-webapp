@@ -132,12 +132,12 @@ const { data, pending, error } = useAsyncData('products', async () => {
             }
         });
     } catch (err) {
-        // TODO: Error snackbar
+        // TODO: Show snackbar error
         console.error('Errore durante il recupero dei dati:', err);
     }
 }, { watch: [debouncedSearch] });
 
-const products = computed<Array<Model>>(() => data.value);
+const products = computed<Array<Model>>(() => data.value ?? []);
 const headers = ref([
     { title: 'ID', key: 'id' },
     { title: 'Title', key: 'title' },

@@ -7,9 +7,4 @@
 </template>
 
 <script setup lang="ts">
-const runtimeConfig = useRuntimeConfig();
-
-onBeforeMount(() => {
-  console.log("🚀 ~ runtimeConfig:", runtimeConfig)
-});
 </script>

@@ -14,7 +14,6 @@
                         </v-list-item>
                     </v-list>
 
-
                     <v-divider class="my-2" />
 
                     <v-btn variant="text" block @click="openDeliveryAddresses">
@@ -34,6 +33,7 @@
 import { EventType, emitter } from '@/utils/eventBus';
 
 const store = useStore();
+const token = useCookie('token');
 
 const user = {
     initials: 'JD',
@@ -46,8 +46,9 @@ const openDeliveryAddresses = () => {
 };
 
 const handleLogout = () => {
+    token.value = null;
+    // TODO: Successfull logout snackbar
     store.logout();
     navigateTo('/login');
-    // TODO: Successfull logout snackbar
 };
 </script>

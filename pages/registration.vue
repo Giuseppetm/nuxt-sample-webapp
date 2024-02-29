@@ -44,7 +44,8 @@ import { useVuelidate } from '@vuelidate/core';
 import { email, helpers, required, sameAs } from '@vuelidate/validators';
 
 definePageMeta({
-    layout: 'default'
+    layout: 'default',
+    middleware: 'guest'
 });
 
 interface FormState {
@@ -89,11 +90,9 @@ const v$ = useVuelidate(rules, state);
 const loading = ref(false);
 
 const handleRegistration = () => {
-    loading.value = true;
-
     v$.value.$validate().then(async (res) => {
         if (res) {
-            console.log(res)
+            loading.value = true;
             loading.value = false;
             await navigateTo('/login');
         }
