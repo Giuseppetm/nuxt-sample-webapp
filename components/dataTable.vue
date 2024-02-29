@@ -12,7 +12,7 @@
 
                 <div class="d-flex w-full md:max-w-screen-md flex-row gap-4">
                     <v-text-field v-model="search" :prepend-inner-icon="mdiMagnify" density="compact" label="Search"
-                        single-line flat hide-details variant="solo-filled" />
+                        single-line flat hide-details variant="solo-filled" clearable />
                     <v-btn text="Add product" variant="outlined" :prepend-icon="mdiPlus" @click="openDialog('create')" />
                 </div>
             </v-card-title>
@@ -118,9 +118,11 @@ watch(search, (newValue) => {
     debouncedSearchHandler(newValue);
 });
 
-const { data, pending, error } = useAsyncData('products', async () => {
+const { data, pending } = useAsyncData('products', async () => {
     try {
-        const response = await axios.get(`${runtimeConfig.public.apiBase}/products${search.value && `/search?q=${search.value}`}`);
+        const searchQuery = (search.value !== '' && search.value !== null) ? `/search?q=${search.value}` : ''; 
+
+        const response = await axios.get(`${runtimeConfig.public.apiBase}/products${searchQuery}`);
         return response.data.products.map((p: any) => {
             return {
                 id: p.id,

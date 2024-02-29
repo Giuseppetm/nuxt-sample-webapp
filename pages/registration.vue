@@ -29,7 +29,7 @@
                         placeholder="Confirm your password" variant="outlined" @input="v$.confirmPassword.$touch"
                         @blur="v$.confirmPassword.$touch" required />
                 </div>
-                <v-btn color="primary" block text="Register" class="mt-2" @click="handleRegistration" />
+                <v-btn color="primary" block text="Register" class="mt-2" @click="handleRegistration" :loading="loading" />
             </form>
             <span class="text-secondary">
                 If you already have an account
@@ -93,8 +93,12 @@ const handleRegistration = () => {
     v$.value.$validate().then(async (res) => {
         if (res) {
             loading.value = true;
-            loading.value = false;
-            await navigateTo('/login');
+
+            // Mockup, dummyjson has no register API
+            setTimeout(async() => {
+                loading.value = false;
+                await navigateTo('/login');
+            }, 1500);
         }
     });
 };

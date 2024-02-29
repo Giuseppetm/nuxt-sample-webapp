@@ -12,7 +12,8 @@ export default defineNuxtConfig({
       })
     },
     '@pinia/nuxt',
-    '@nuxt/image'
+    '@nuxt/image',
+    '@nuxtjs/i18n'
   ],
   pinia: {
     storesDirs: ['./stores/**'],
@@ -23,6 +24,10 @@ export default defineNuxtConfig({
         transformAssetUrls,
       },
     },
+  },
+  i18n: {
+    locales: ['it', 'en'],
+    defaultLocale: 'it',
   },
   devtools: { 
     enabled: true 
