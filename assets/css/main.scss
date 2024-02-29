@@ -19,6 +19,10 @@ body, html {
     padding: 0;
 }
 
+b {
+    font-weight: 600 !important;
+}
+
 h1 {
     font-size: clamp(56px, 6vw + 2.5rem, 114px);
     line-height: 90px;

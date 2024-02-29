@@ -12,9 +12,9 @@
     </header>
     <slot />
 
-    <footer v-if="store.isAuthenticated">
-        <div class="container mx-auto my-10 text-end">
-            <span>Created by Giuseppe Del Campo</span>
+    <footer>
+        <div :class="{'container mx-auto my-10': true, 'text-end': store.isAuthenticated }">
+            <span>Developed by <b>Giuseppe Del Campo</b></span>
         </div>
     </footer>
 </template>
