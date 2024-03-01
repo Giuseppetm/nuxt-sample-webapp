@@ -99,10 +99,9 @@ const dialog = ref(false);
 const loading = ref(false);
 
 const handleSave = () => {
-  loading.value = true;
-
   v$.value.$validate().then(async(res) => {
     if (res) {
+      loading.value = true;
       if (editMode) editMode.value = false;
 
       store.setDeliveryAddress(state);
