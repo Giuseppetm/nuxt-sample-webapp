@@ -70,7 +70,7 @@ const handleLogin = () => {
 
         if (response.status === 200) {
           token.value = response.data.token;
-          store.login(response.data.token);
+          store.login(response.data, response.data.token);
           // TODO: Snackbar login success
           await navigateTo('/');
         }

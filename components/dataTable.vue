@@ -123,16 +123,7 @@ const { data, pending } = useAsyncData('products', async () => {
         const searchQuery = (search.value !== '' && search.value !== null) ? `/search?q=${search.value}` : ''; 
 
         const response = await axios.get(`${runtimeConfig.public.apiBase}/products${searchQuery}`);
-        return response.data.products.map((p: any) => {
-            return {
-                id: p.id,
-                title: p.title,
-                description: p.description,
-                discountPercentage: p.discountPercentage,
-                price: p.price,
-                rating: p.rating
-            }
-        });
+        return response.data.products;
     } catch (err) {
         // TODO: Show snackbar error
         console.error('Errore durante il recupero dei dati:', err);

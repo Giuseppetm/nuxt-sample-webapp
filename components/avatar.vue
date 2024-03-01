@@ -9,8 +9,8 @@
             <v-card-text>
                 <div class="mx-auto">
                     <v-list>
-                        <v-list-item prepend-avatar="https://cdn.vuetifyjs.com/images/john.jpg" :title="user.fullName"
-                            :subtitle="user.email">
+                        <v-list-item prepend-avatar="https://cdn.vuetifyjs.com/images/john.jpg" :title="fullName"
+                            :subtitle="user!.email">
                         </v-list-item>
                     </v-list>
 
@@ -35,11 +35,8 @@ import { EventType, emitter } from '@/utils/eventBus';
 const store = useStore();
 const token = useCookie('token');
 
-const user = {
-    initials: 'JD',
-    fullName: 'John Doe',
-    email: 'john.doe@doe.com',
-};
+const user = computed(() => store.user);
+const fullName = computed(() => `${store.user?.firstName} ${store.user?.lastName}`);
 
 const openDeliveryAddresses = () => {
     emitter.emit(EventType.OPEN_DELIVERY_ADDRESS);

@@ -12,3 +12,11 @@ export interface Model {
     price: number,
     rating: number
 };
+
+export interface User {
+    id: number,
+    username: string,
+    email: string,
+    firstName: string,
+    lastName: string,
+};

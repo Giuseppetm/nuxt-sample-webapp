@@ -23,7 +23,7 @@ export const checkAuthentication = async() => {
         });
 
         if (response.status === 200) {
-            store.login(token.value);
+            store.login(response.data, token.value);
             return true;
         } else {
             return false;
