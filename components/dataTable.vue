@@ -68,7 +68,7 @@
                 </template>
             </v-data-table>
             <template v-else-if="error">
-                An error has occurred, reload the page.
+                An error has occurred, please reload the page.
             </template>
         </v-card>
 
@@ -95,21 +95,19 @@
                                 :error-messages="v$.description.$errors.map((e: any) => e.$message)"
                                 label="Product description" class="mb-2" placeholder="Insert the description of the product"
                                 variant="outlined" @input="v$.description.$touch" @blur="v$.description.$touch" required />
-                            <v-text-field v-model="state.discountPercentage" type="number"
+                            <v-text-field v-model="state.discountPercentage" type="number" suffix="%"
                                 :error-messages="v$.discountPercentage.$errors.map((e: any) => e.$message)"
                                 label="Discount percentage" class="mb-2"
                                 placeholder="Insert the discount percentage of the product" variant="outlined"
                                 @input="v$.discountPercentage.$touch" @blur="v$.discountPercentage.$touch" required />
-                            <v-text-field v-model="state.price" type="number"
+                            <v-text-field v-model="state.price" type="number" prefix="$"
                                 :error-messages="v$.price.$errors.map((e: any) => e.$message)" label="Product price"
                                 class="mb-2" placeholder="Insert the price of the product" variant="outlined"
                                 @input="v$.price.$touch" @blur="v$.price.$touch" required />
                             <div class="d-flex flex-col justify-center align-center gap-3 mb-8">
                                 <v-label text="Product rating" class="d-block" />
-                                <v-rating v-model="state.rating" :item-labels="['1', '', '', '', '5']" hover size="large"
-                                    :error-messages="v$.rating.$errors.map((e: any) => e.$message)" color="orange"
-                                    label="Product rating" placeholder="Insert the rating of the product"
-                                    @input="v$.rating.$touch" @blur="v$.rating.$touch" required />
+                                <v-rating v-model="state.rating" :item-labels="['1', '', '', '', '5']" hover size="large" 
+                                    color="orange" label="Product rating" placeholder="Insert the rating of the product" required />
                                 <span class="text-red-darken-4">
                                     {{ v$.rating.$errors.length > 0 ? v$.rating.$errors.map((e: any) => e.$message).toString() : '' }}
                                 </span>
@@ -145,7 +143,7 @@ import { useVuelidate } from '@vuelidate/core';
 import { helpers, minValue, maxValue, required } from '@vuelidate/validators';
 import { mdiDelete, mdiMagnify, mdiPencil, mdiPlus, mdiClose, mdiTrashCan } from '@mdi/js';
 import { useDebounceFn } from '@vueuse/core';
-import type { Model } from '~/utils/types';
+import type { Product } from '~/utils/types';
 import axios from 'axios';
 
 const runtimeConfig = useRuntimeConfig();
@@ -166,15 +164,15 @@ const { data, pending, error } = useAsyncData('products', async () => {
     try {
         const searchQuery = (search.value !== '' && search.value !== null) ? `/search?q=${search.value}` : '';
 
-        const response = await axios.get(`${runtimeConfig.public.apiBase}/products${searchQuery}`);
+        const response = await axios.get(`${runtimeConfig.public.apiBase}/products?limit=100${searchQuery}`);
         return response.data.products;
     } catch (err) {
         // TODO: Show snackbar error
-        console.error('Errore durante il recupero dei dati:', err);
+        console.error('Error retrieving data:', err);
     }
 }, { watch: [debouncedSearch] });
 
-const products = computed<Array<Model>>(() => data.value ?? []);
+const products = computed<Array<Product>>(() => data.value ?? []);
 const headers = ref([
     { title: 'ID', key: 'id' },
     { title: 'Title', key: 'title' },
@@ -197,7 +195,7 @@ const formTitle = computed<string>(
             : 'Are you sure you want to delete this product?'
 );
 
-const product = ref<Model | null>(null);
+const product = ref<Product | null>(null);
 const loading = ref<boolean>(false);
 
 const rules = {
@@ -216,12 +214,20 @@ const rules = {
     }
 };
 
-const initialState = ref({
+interface ProductFormState {
+    title: string,
+    description: string,
+    discountPercentage: number | null,
+    price: number | null,
+    rating: number | undefined
+};
+
+const initialState = ref<ProductFormState>({
     title: '',
     description: '',
-    discountPercentage: '',
-    price: '',
-    rating: 0
+    discountPercentage: null,
+    price: null,
+    rating: undefined
 });
 
 const state = ref({
@@ -234,9 +240,9 @@ watch(
         state.value = {
             title: newValue?.title ?? '',
             description: newValue?.description ?? '',
-            discountPercentage: (String(newValue?.discountPercentage)) ?? '',
-            price: (String(newValue?.price)) ?? '',
-            rating: newValue?.rating ?? 0
+            discountPercentage: newValue?.discountPercentage ?? null,
+            price: newValue?.price ?? null,
+            rating: newValue?.rating ?? undefined
         }
     }
 );
@@ -265,13 +271,18 @@ const handleCreateElement = () => {
     v$.value.$validate().then(async (res) => {
         if (res) {
             loading.value = true;
-            loading.value = false;
-
-            // TODO: Push new local item
-            // TODO: API post
-            // TODO: Snackbar succesfull
-
-            dialog.value = false;
+            
+            try {
+                const response = await axios.post(`${runtimeConfig.public.apiBase}/products/add`, state.value);
+                data.value.unshift({ ...state.value, id: response.data.id });
+                dialog.value = false;
+                // TODO: Snackbar successful create
+            } catch (error) {
+                // TODO: Snackbar error create
+                console.error('Error creating a new product:', error);
+            } finally {
+                loading.value = false;
+            }
         }
     });
 };
@@ -280,25 +291,40 @@ const handleEditElement = () => {
     v$.value.$validate().then(async (res) => {
         if (res) {
             loading.value = true;
-            loading.value = false;
 
-            // TODO: Edit local element
-            // TODO: Api put
-            // TODO: Snackbar succesfull
+            try {
+                await axios.put(`${runtimeConfig.public.apiBase}/products/${product.value!.id}`, state.value);
 
-            dialog.value = false;
+                const index = data.value.findIndex((p: Product) => p.id === product.value!.id);
+                data.value[index] = { ...state.value, id: product.value!.id };
+                dialog.value = false;
+                // TODO: Snackbar successful edit
+            } catch (error) {
+                // TODO: Snackbar error edit
+                console.error('Error modifying product:', error);
+            } finally {
+                loading.value = false;
+            }
         }
     });
 };
 
-const handleDeleteElement = () => {
-    // TODO: Api delete
-    // TODO: Delete local element
-    // TODO: Snackbar succesfull
+const handleDeleteElement = async() => {
     loading.value = true;
-    loading.value = false;
 
-    dialog.value = false;
+    try {
+        await axios.delete(`${runtimeConfig.public.apiBase}/products/${product.value!.id}`);
+
+        const index = data.value.findIndex((p: Product) => p.id === product.value!.id);
+        data.value.splice(index, 1);
+        dialog.value = false;
+        // TODO: Snackbar successful delete
+    } catch (error) {
+        // TODO: Snackbar error delete
+        console.error('Error deleting product:', error);
+    } finally {
+        loading.value = false;
+    }
 };
 </script>
 

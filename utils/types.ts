@@ -4,7 +4,7 @@ export interface DeliveryAddress {
     note: string
 };
 
-export interface Model {
+export interface Product {
     id: number,
     title: string,
     description: string,
