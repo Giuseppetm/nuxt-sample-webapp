@@ -21,3 +21,9 @@ export interface User {
     lastName: string,
     image: string
 };
+
+export enum Snackbar {
+    SUCCESS = 'SUCCESS',
+    ERROR = 'ERROR',
+    STANDARD = 'STANDARD'
+};

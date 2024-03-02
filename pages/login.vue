@@ -24,6 +24,7 @@
 import { useVuelidate } from '@vuelidate/core';
 import { helpers, required } from '@vuelidate/validators';
 import axios from 'axios';
+import { Snackbar } from '~/utils/types';
 
 const { t } = useI18n();
 
@@ -89,12 +90,12 @@ const handleLogin = () => {
         if (response.status === 200) {
           token.value = response.data.token;
           store.login(response.data, response.data.token);
-          // TODO: Snackbar login success
+          emitter.emit(EventType.SNACKBAR_MESSAGE, { message: 'Login successfully.', type: Snackbar.SUCCESS });
           await navigateTo('/');
         }
       } catch (error) {
-        // TODO: Snackbar login failed
-        console.error('Login failed', error);
+        emitter.emit(EventType.SNACKBAR_MESSAGE, { message: 'Login failed, check your e-mail and password.', type: Snackbar.ERROR });
+        console.error('Login failed:', error);
       } finally {
         loading.value = false;
       }

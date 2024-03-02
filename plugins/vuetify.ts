@@ -1,4 +1,3 @@
-import '@mdi/font/css/materialdesignicons.css';
 import 'vuetify/styles';
 import { createVuetify, type ThemeDefinition } from 'vuetify';
 import { aliases, mdi } from 'vuetify/iconsets/mdi-svg';
@@ -9,7 +8,7 @@ const customTheme: ThemeDefinition = {
         text: '#151515',
         secondary: '#656565',
         tertiary: '#c5c5c5',
-        primary: '#4734F6',
+        primary: '#26A69A',
         error: '#B00020',
         info: '#2196F3',
         success: '#4CAF50',

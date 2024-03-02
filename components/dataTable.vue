@@ -88,7 +88,7 @@
                     </div>
 
                     <template v-if="operationType === 'create' || operationType === 'edit'">
-                        <form>
+                        <v-form>
                             <v-text-field v-model="state.title"
                                 :error-messages="v$.title.$errors.map((e: any) => e.$message)" label="Product title"
                                 class="mb-2" placeholder="Insert the title of the product" variant="outlined"
@@ -118,10 +118,10 @@
                             <div class="d-flex flex-row justify-end">
                                 <v-btn type="primary" color="success"
                                     :text="operationType === 'edit' ? 'Salva le modifiche' : 'Create the product'"
-                                    @click="() => { operationType === 'edit' ? handleEditElement : handleCreateElement }"
+                                    @click="() => { operationType === 'edit' ? handleEditElement() : handleCreateElement() }"
                                     :prepend-icon="operationType === 'edit' ? mdiPencil : mdiPlus" :loading="loading" />
                             </div>
-                        </form>
+                        </v-form>
                     </template>
 
                     <template v-else-if="operationType === 'delete'">
@@ -147,7 +147,7 @@ import { useVuelidate } from '@vuelidate/core';
 import { helpers, minValue, maxValue, required } from '@vuelidate/validators';
 import { mdiDelete, mdiMagnify, mdiPencil, mdiPlus, mdiClose, mdiTrashCan } from '@mdi/js';
 import { useDebounceFn } from '@vueuse/core';
-import type { Product } from '~/utils/types';
+import { Snackbar, type Product } from '~/utils/types';
 import axios from 'axios';
 
 const runtimeConfig = useRuntimeConfig();
@@ -171,7 +171,7 @@ const { data, pending, error } = useAsyncData('products', async () => {
         const response = await axios.get(`${runtimeConfig.public.apiBase}/products?limit=100${searchQuery}`);
         return response.data.products;
     } catch (err) {
-        // TODO: Show snackbar error
+        emitter.emit(EventType.SNACKBAR_MESSAGE, { message: 'An error has occurred while retrieving the products.', type: Snackbar.ERROR });
         console.error('Error retrieving data:', err);
     }
 }, { watch: [debouncedSearch] });
@@ -283,9 +283,9 @@ const handleCreateElement = () => {
                 const response = await axios.post(`${runtimeConfig.public.apiBase}/products/add`, state.value);
                 data.value.unshift({ ...state.value, id: response.data.id });
                 dialog.value = false;
-                // TODO: Snackbar successful create
+                emitter.emit(EventType.SNACKBAR_MESSAGE, { message: 'Product created successfully.', type: Snackbar.SUCCESS });
             } catch (error) {
-                // TODO: Snackbar error create
+                emitter.emit(EventType.SNACKBAR_MESSAGE, { message: 'An error has occurred during the creation of the product.', type: Snackbar.ERROR });
                 console.error('Error creating a new product:', error);
             } finally {
                 loading.value = false;
@@ -305,9 +305,9 @@ const handleEditElement = () => {
                 const index = data.value.findIndex((p: Product) => p.id === product.value!.id);
                 data.value[index] = { ...state.value, id: product.value!.id };
                 dialog.value = false;
-                // TODO: Snackbar successful edit
+                emitter.emit(EventType.SNACKBAR_MESSAGE, { message: 'Product edited successfully.', type: Snackbar.SUCCESS });
             } catch (error) {
-                // TODO: Snackbar error edit
+                emitter.emit(EventType.SNACKBAR_MESSAGE, { message: 'An error has occurred while editing the product.', type: Snackbar.ERROR });
                 console.error('Error modifying product:', error);
             } finally {
                 loading.value = false;
@@ -325,9 +325,9 @@ const handleDeleteElement = async () => {
         const index = data.value.findIndex((p: Product) => p.id === product.value!.id);
         data.value.splice(index, 1);
         dialog.value = false;
-        // TODO: Snackbar successful delete
+        emitter.emit(EventType.SNACKBAR_MESSAGE, { message: 'Product deleted successfully.', type: Snackbar.SUCCESS });
     } catch (error) {
-        // TODO: Snackbar error delete
+        emitter.emit(EventType.SNACKBAR_MESSAGE, { message: 'An error has occurred while deleting the product.', type: Snackbar.ERROR });
         console.error('Error deleting product:', error);
     } finally {
         loading.value = false;

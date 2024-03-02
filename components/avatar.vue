@@ -29,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import { EventType, emitter } from '@/utils/eventBus';
+import { Snackbar } from '~/utils/types';
 
 const store = useStore();
 const token = useCookie('token');
@@ -43,7 +43,7 @@ const openDeliveryAddresses = () => {
 
 const handleLogout = () => {
     token.value = null;
-    // TODO: Successfull logout snackbar
+    emitter.emit(EventType.SNACKBAR_MESSAGE, { message: 'Logout successfully.', type: Snackbar.SUCCESS });
     store.logout();
     navigateTo('/login');
 };
