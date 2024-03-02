@@ -24,6 +24,7 @@ export const checkAuthentication = async() => {
 
         if (response.status === 200) {
             store.login(response.data, token.value);
+            store.setDeliveryAddress(response.data.address);
             return true;
         } else {
             return false;

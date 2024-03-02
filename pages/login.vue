@@ -1,6 +1,6 @@
 <template>
-  <section class="login container mx-auto my-20">
-    <div class="max-w-screen-lg mb-20">
+  <section class="login container mx-auto my-10 md:my-20">
+    <div class="max-w-screen-lg mb-8 md:mb-20">
       <h1>
         To continue you must <span class="text-tertiary">log in</span>.
       </h1>
@@ -8,14 +8,17 @@
 
     <div class="max-w-screen-xs">
       <form class="mb-6">
-        <v-text-field v-model="state.username" :error-messages="v$.username.$errors.map((e: any) => e.$message)" label="Username"
-          class="mb-2" placeholder="Insert your username" variant="outlined" @input="v$.username.$touch" @blur="v$.username.$touch" required />
-        <v-text-field v-model="state.password" type="password" :error-messages="v$.password.$errors.map((e: any) => e.$message)"
-          label="Password" placeholder="Insert your password" variant="outlined" @input="v$.password.$touch"
-          @blur="v$.password.$touch" required />
+        <v-text-field v-model="state.username" :error-messages="v$.username.$errors.map((e: any) => e.$message)"
+          label="Username" class="mb-1 md:mb-2" placeholder="Insert your username" variant="outlined"
+          @input="v$.username.$touch" @blur="v$.username.$touch" required />
+        <v-text-field v-model="state.password" type="password"
+          :error-messages="v$.password.$errors.map((e: any) => e.$message)" label="Password"
+          placeholder="Insert your password" variant="outlined" @input="v$.password.$touch" @blur="v$.password.$touch"
+          required />
         <v-btn color="primary" block text="Login" class="mt-2" @click="handleLogin" :loading="loading" />
       </form>
-      <span class="text-secondary">To create a new account <NuxtLink class="text-primary" to="/registration">click here</NuxtLink>.</span>
+      <span class="text-secondary">To create a new account <NuxtLink class="text-primary" to="/registration">click here
+        </NuxtLink>.</span>
     </div>
   </section>
 </template>

@@ -2,7 +2,7 @@
     <v-menu min-width="200px" offset="10" location="bottom right">
         <template v-slot:activator="{ props }">
             <v-btn icon v-bind="props">
-                <v-avatar color="primary" size="large" :image="user?.image" />
+                <v-avatar size="large" :image="user?.image" />
             </v-btn>
         </template>
         <v-card>

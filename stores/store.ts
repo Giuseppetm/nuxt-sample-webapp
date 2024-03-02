@@ -1,18 +1,18 @@
-import type { DeliveryAddress, User } from "~/utils/types";
+import type { Address, User } from "~/utils/types";
 
 interface State {
-    user: User | null,
+    user?: User,
     isAuthenticated: boolean,
-    token: string | null,
-    deliveryAddress: DeliveryAddress | null
+    token?: string,
+    deliveryAddress?: Address
 };
 
 export const useStore = defineStore('store', {
     state: (): State => ({
-        user: null,
+        user: undefined,
         isAuthenticated: false,
-        token: null,
-        deliveryAddress: null
+        token: undefined,
+        deliveryAddress: undefined
     }),
     getters: {},
     actions: {
@@ -22,9 +22,9 @@ export const useStore = defineStore('store', {
             this.isAuthenticated = true;
         },
         logout() {
-            this.token = null;
             this.isAuthenticated = false;
-            this.user = null;
+            this.token = undefined;
+            this.user = undefined;
         },
         setDeliveryAddress(address: DeliveryAddress) {
             this.deliveryAddress = address;

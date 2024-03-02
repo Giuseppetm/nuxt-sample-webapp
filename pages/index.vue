@@ -1,13 +1,13 @@
 <template>
-    <section class="homepage container mx-auto mt-20 mb-5">
-        <h1 class="mb-12">
+    <section class="homepage container mx-auto mt-10 md:mt-20 mb-5">
+        <h1 class="mb-4 md:mb-12">
             This is a simple web application with a few features.
         </h1>
 
         <DataTable />
     </section>
 
-    <DeliveryAddress/>
+    <DeliveryAddress />
 </template>
 
 <script setup lang="ts">

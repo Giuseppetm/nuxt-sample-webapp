@@ -56,11 +56,12 @@
                 </template>
 
                 <template v-slot:item.actions="{ item }">
-                    <v-spacer />
-                    <v-btn :icon="mdiPencil" variant="text" class="text-secondary" size="small" rounded="0"
-                        @click="openDialog('edit', item.id)" />
-                    <v-btn :icon="mdiDelete" variant="text" class="text-secondary" size="small" rounded="0"
-                        @click="openDialog('delete', item.id)" />
+                    <div class="d-flex flex-row flex-wrap gap-1">
+                        <v-btn :icon="mdiPencil" variant="text" class="text-secondary" size="small" rounded="0"
+                            @click="openDialog('edit', item.id)" />
+                        <v-btn :icon="mdiDelete" variant="text" class="text-secondary" size="small" rounded="0"
+                            @click="openDialog('delete', item.id)" />
+                    </div>
                 </template>
             </v-data-table>
 
@@ -102,7 +103,7 @@
                                 :error-messages="v$.price.$errors.map((e: any) => e.$message)" label="Product price"
                                 class="mb-2" placeholder="Insert the price of the product" variant="outlined"
                                 @input="v$.price.$touch" @blur="v$.price.$touch" required />
-                            <div class="d-flex flex-row justify-end gap-3">
+                            <div class="d-flex flex-row justify-end gap-3 flex-wrap">
                                 <v-btn text="Reset fields" @click="resetFormState" :prepend-icon="mdiRestore"
                                     :disabled="loading" />
                                 <v-btn color="success"
@@ -118,7 +119,7 @@
                             <span>{{ product!.title }}</span>
                         </div>
 
-                        <div class="d-flex flex-row gap-4 justify-center items-center">
+                        <div class="d-flex flex-row gap-4 justify-center items-center flex-wrap">
                             <v-btn variant="outlined" text="Cancel" :prepend-icon="mdiClose" @click="dialog = false;" />
                             <v-btn color="error" text="Delete" :prepend-icon="mdiTrashCan"
                                 @click="handleDeleteElement()" :loading="loading" />

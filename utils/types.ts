@@ -1,9 +1,3 @@
-export interface DeliveryAddress {
-    city: string,
-    address: string,
-    note: string
-};
-
 export interface Product {
     id: number,
     title: string,
@@ -18,7 +12,15 @@ export interface User {
     email: string,
     firstName: string,
     lastName: string,
-    image: string
+    image: string,
+    address: Address
+};
+
+export interface Address {
+    address: string,
+    city: string,
+    postalCode: number,
+    note: string
 };
 
 export enum Snackbar {

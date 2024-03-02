@@ -1,6 +1,6 @@
 <template>
-    <section class="registration container mx-auto my-20">
-        <div class="max-w-screen-lg mb-20">
+    <section class="registration container mx-auto my-10 md:my-20">
+        <div class="max-w-screen-lg mb-8 md:mb-20">
             <h1>
                 Create a <span class="text-tertiary">new account</span>.
             </h1>
@@ -8,29 +8,29 @@
 
         <div class="max-w-screen-md">
             <form class="mb-6">
-                <div class="grid grid-cols-2 gap-3">
+                <div class="grid md:grid-cols-2 sm:grid-cols-1 gap-1 md:gap-3">
                     <v-text-field v-model="state.name" :error-messages="v$.name.$errors.map((e: any) => e.$message)"
-                        label="Name" class="mb-2" placeholder="Insert your name" variant="outlined"
+                        label="Name" class="mb-1 md:mb-2" placeholder="Insert your name" variant="outlined"
                         @input="v$.name.$touch" @blur="v$.name.$touch" required />
                     <v-text-field v-model="state.surname"
-                        :error-messages="v$.surname.$errors.map((e: any) => e.$message)" label="Surname" class="mb-2"
-                        placeholder="Insert your surname" variant="outlined" @input="v$.surname.$touch"
-                        @blur="v$.surname.$touch" required />
+                        :error-messages="v$.surname.$errors.map((e: any) => e.$message)" label="Surname"
+                        class="mb-1 md:mb-2" placeholder="Insert your surname" variant="outlined"
+                        @input="v$.surname.$touch" @blur="v$.surname.$touch" required />
                 </div>
-                <div class="grid grid-cols-3 gap-3">
+                <div class="grid md:grid-cols-3 sm:grid-cols-1 gap-1 md:gap-3">
                     <v-text-field v-model="state.email" :error-messages="v$.email.$errors.map((e: any) => e.$message)"
-                        label="E-mail" class="mb-2" placeholder="Insert your e-mail" variant="outlined"
+                        label="E-mail" class="mb-1 md:mb-2" placeholder="Insert your e-mail" variant="outlined"
                         @input="v$.email.$touch" @blur="v$.email.$touch" required />
                     <v-text-field v-model="state.password" type="password"
                         :error-messages="v$.password.$errors.map((e: any) => e.$message)" label="Password"
-                        placeholder="Insert your password" variant="outlined" @input="v$.password.$touch"
-                        @blur="v$.password.$touch" required />
-                    <v-text-field v-model="state.confirmPassword" type="password"
+                        class="mb-1 md:mb-2" placeholder="Insert your password" variant="outlined"
+                        @input="v$.password.$touch" @blur="v$.password.$touch" required />
+                    <v-text-field v-model="state.confirmPassword" type="password" class="mb-1 md:mb-2"
                         :error-messages="v$.confirmPassword.$errors.map((e: any) => e.$message)"
                         label="Confirm password" placeholder="Confirm your password" variant="outlined"
                         @input="v$.confirmPassword.$touch" @blur="v$.confirmPassword.$touch" required />
                 </div>
-                <v-btn color="primary" block text="Register" class="mt-2" @click="handleRegistration"
+                <v-btn color="primary" block text="Register" class="mt-1 md:mt-2" @click="handleRegistration"
                     :loading="loading" />
             </form>
             <span class="text-secondary">
@@ -44,6 +44,7 @@
 <script setup lang="ts">
 import { useVuelidate } from '@vuelidate/core';
 import { email, helpers, required, sameAs } from '@vuelidate/validators';
+import axios from 'axios';
 
 const { t } = useI18n();
 
@@ -74,10 +75,9 @@ interface FormState {
     email: string,
     password: string,
     confirmPassword: string
-    // fiscalCode
-    // birthDate
-    // birthCity
 };
+
+const runtimeConfig = useRuntimeConfig();
 
 const initialState: FormState = {
     name: '',
@@ -114,11 +114,16 @@ const handleRegistration = () => {
         if (res) {
             loading.value = true;
 
-            // Mockup, dummyjson has no register API
-            setTimeout(async () => {
-                loading.value = false;
+            try {
+                await axios.post(`${runtimeConfig.public.apiBase}/users/add`, state);
                 await navigateTo('/login');
-            }, 1500);
+                emitter.emit(EventType.SNACKBAR_MESSAGE, { message: 'User registered successfully.', type: Snackbar.SUCCESS });
+            } catch (error) {
+                emitter.emit(EventType.SNACKBAR_MESSAGE, { message: 'An error has occurred during the registration of the user.', type: Snackbar.ERROR });
+                console.error('Error creating a new user:', error);
+            } finally {
+                loading.value = false;
+            }
         }
     });
 };
