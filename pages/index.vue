@@ -1,5 +1,5 @@
 <template>
-    <section class="homepage container mx-auto my-20">
+    <section class="homepage container mx-auto mt-20 mb-5">
         <h1 class="mb-12">
             This is a simple web application with a few features.
         </h1>

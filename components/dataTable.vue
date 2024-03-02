@@ -83,7 +83,7 @@
                     </div>
 
                     <template v-if="operationType === 'create' || operationType === 'edit'">
-                        <v-form>
+                        <form>
                             <v-text-field v-model="state.title"
                                 :error-messages="v$.title.$errors.map((e: any) => e.$message)" label="Product title"
                                 class="mb-2" placeholder="Insert the title of the product" variant="outlined"
@@ -102,13 +102,15 @@
                                 :error-messages="v$.price.$errors.map((e: any) => e.$message)" label="Product price"
                                 class="mb-2" placeholder="Insert the price of the product" variant="outlined"
                                 @input="v$.price.$touch" @blur="v$.price.$touch" required />
-                            <div class="d-flex flex-row justify-end">
-                                <v-btn type="primary" color="success"
-                                    :text="operationType === 'edit' ? 'Salva le modifiche' : 'Create the product'"
+                            <div class="d-flex flex-row justify-end gap-3">
+                                <v-btn text="Reset fields" @click="resetFormState" :prepend-icon="mdiRestore"
+                                    :disabled="loading" />
+                                <v-btn color="success"
+                                    :text="operationType === 'edit' ? 'Salva le modifiche' : 'Insert product'"
                                     @click="() => { operationType === 'edit' ? handleEditElement() : handleCreateElement() }"
                                     :prepend-icon="operationType === 'edit' ? mdiPencil : mdiPlus" :loading="loading" />
                             </div>
-                        </v-form>
+                        </form>
                     </template>
 
                     <template v-else-if="operationType === 'delete'">
@@ -132,7 +134,7 @@
 <script setup lang="ts">
 import { useVuelidate } from '@vuelidate/core';
 import { helpers, minValue, maxValue, required } from '@vuelidate/validators';
-import { mdiDelete, mdiMagnify, mdiPencil, mdiPlus, mdiClose, mdiTrashCan } from '@mdi/js';
+import { mdiDelete, mdiMagnify, mdiPencil, mdiPlus, mdiClose, mdiTrashCan, mdiRestore } from '@mdi/js';
 import { useDebounceFn } from '@vueuse/core';
 import { Snackbar, type Product } from '~/utils/types';
 import axios from 'axios';
@@ -153,9 +155,9 @@ watch(search, (newValue) => {
 
 const { data, pending, error } = useAsyncData('products', async () => {
     try {
-        const searchQuery = (search.value !== '' && search.value !== null) ? `/search?q=${search.value}` : '';
+        const searchQuery = (search.value !== '' && search.value !== null) ? `/search?q=${search.value}` : '?limit=100';
 
-        const response = await axios.get(`${runtimeConfig.public.apiBase}/products?limit=100${searchQuery}`);
+        const response = await axios.get(`${runtimeConfig.public.apiBase}/products${searchQuery}`);
         return response.data.products;
     } catch (err) {
         emitter.emit(EventType.SNACKBAR_MESSAGE, { message: 'An error has occurred while retrieving the products.', type: Snackbar.ERROR });
