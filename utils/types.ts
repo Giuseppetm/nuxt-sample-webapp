@@ -9,8 +9,7 @@ export interface Product {
     title: string,
     description: string,
     discountPercentage: number,
-    price: number,
-    rating: number
+    price: number
 };
 
 export interface User {

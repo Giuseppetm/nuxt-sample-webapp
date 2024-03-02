@@ -55,11 +55,6 @@
                     </v-chip>
                 </template>
 
-                <template v-slot:item.rating="{ item }">
-                    <v-rating :model-value="item.rating" color="orange-darken-2" density="compact" size="small"
-                        readonly />
-                </template>
-
                 <template v-slot:item.actions="{ item }">
                     <v-spacer />
                     <v-btn :icon="mdiPencil" variant="text" class="text-secondary" size="small" rounded="0"
@@ -107,14 +102,6 @@
                                 :error-messages="v$.price.$errors.map((e: any) => e.$message)" label="Product price"
                                 class="mb-2" placeholder="Insert the price of the product" variant="outlined"
                                 @input="v$.price.$touch" @blur="v$.price.$touch" required />
-                            <div class="d-flex flex-col justify-center align-center gap-3 mb-8">
-                                <v-label text="Product rating" class="d-block" />
-                                <v-rating v-model="state.rating" :item-labels="['1', '', '', '', '5']" hover
-                                    size="large" color="orange" required />
-                                <span class="text-red-darken-4">
-                                    {{ v$.rating.$errors.length > 0 ? v$.rating.$errors.map((e: any) => e.$message).toString() : '' }}
-                                </span>
-                            </div>
                             <div class="d-flex flex-row justify-end">
                                 <v-btn type="primary" color="success"
                                     :text="operationType === 'edit' ? 'Salva le modifiche' : 'Create the product'"
@@ -183,7 +170,6 @@ const headers = ref([
     { title: 'Description', key: 'description' },
     { title: 'Discount percentage', key: 'discountPercentage' },
     { title: 'Price', key: 'price' },
-    { title: 'Rating', key: 'rating' },
     { title: 'Actions', key: 'actions', sortable: false },
 ]);
 
@@ -213,11 +199,6 @@ const rules = {
     price: {
         required: helpers.withMessage("Price is required.", required),
         minValue: helpers.withMessage("Price must be greater than 0.", minValue(0)),
-    },
-    rating: {
-        required: helpers.withMessage("Rating is required.", required),
-        minValue: helpers.withMessage("Rating must be between 1 and 5.", minValue(1)),
-        maxValue: helpers.withMessage("Rating must be between 1 and 5.", maxValue(5))
     }
 };
 
@@ -225,16 +206,14 @@ interface ProductFormState {
     title: string,
     description: string,
     discountPercentage?: number,
-    price?: number,
-    rating?: number
+    price?: number
 };
 
 const initialState = ref<ProductFormState>({
     title: '',
     description: '',
     discountPercentage: undefined,
-    price: undefined,
-    rating: undefined
+    price: undefined
 });
 
 const state = ref({
@@ -248,8 +227,7 @@ watch(
             title: newValue?.title ?? '',
             description: newValue?.description ?? '',
             discountPercentage: newValue?.discountPercentage,
-            price: newValue?.price,
-            rating: newValue?.rating
+            price: newValue?.price
         }
     }
 );
