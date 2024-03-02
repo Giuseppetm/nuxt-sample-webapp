@@ -10,9 +10,9 @@
             <v-card-title class="d-flex align-center pe-2">
                 <v-spacer />
 
-                <div class="d-flex w-full md:max-w-screen-md flex-row gap-4">
+                <div class="d-flex flex-row flex-wrap justify-end gap-3 md:gap-4 w-full md:max-w-screen-md">
                     <v-text-field v-model="search" :prepend-inner-icon="mdiMagnify" density="compact" label="Search"
-                        single-line flat hide-details variant="solo-filled" clearable />
+                        single-line flat hide-details variant="solo-filled" style="min-width:200px;" clearable />
                     <v-btn text="Add product" variant="outlined" :prepend-icon="mdiPlus" @click="openDialog('create')"
                         :disabled="pending" />
                 </div>
@@ -70,7 +70,7 @@
             </template>
         </v-card>
 
-        <v-dialog v-model="dialog" max-width="600">
+        <v-dialog v-model="dialog" max-width="700">
             <v-card>
                 <v-card-title class="d-flex justify-end">
                     <v-btn :icon="mdiClose" variant="text" @click="dialog = false" />
@@ -81,33 +81,40 @@
                         <h2 class="mb-2">
                             {{ formTitle }}
                         </h2>
+                        <span>
+                            {{ formDescription }}
+                        </span>
                     </div>
 
                     <template v-if="operationType === 'create' || operationType === 'edit'">
                         <form>
-                            <v-text-field v-model="state.title"
-                                :error-messages="v$.title.$errors.map((e: any) => e.$message)" label="Product title"
-                                class="mb-2" placeholder="Insert the title of the product" variant="outlined"
-                                @input="v$.title.$touch" @blur="v$.title.$touch" required />
-                            <v-text-field v-model="state.description"
-                                :error-messages="v$.description.$errors.map((e: any) => e.$message)"
-                                label="Product description" class="mb-2"
-                                placeholder="Insert the description of the product" variant="outlined"
-                                @input="v$.description.$touch" @blur="v$.description.$touch" required />
-                            <v-text-field v-model="state.discountPercentage" type="number" suffix="%"
-                                :error-messages="v$.discountPercentage.$errors.map((e: any) => e.$message)"
-                                label="Discount percentage" class="mb-2"
-                                placeholder="Insert the discount percentage of the product" variant="outlined"
-                                @input="v$.discountPercentage.$touch" @blur="v$.discountPercentage.$touch" required />
-                            <v-text-field v-model="state.price" type="number" prefix="$"
-                                :error-messages="v$.price.$errors.map((e: any) => e.$message)" label="Product price"
-                                class="mb-2" placeholder="Insert the price of the product" variant="outlined"
-                                @input="v$.price.$touch" @blur="v$.price.$touch" required />
+                            <div class="grid md:grid-cols-2 sm:grid-cols-1 gap-1 md:gap-3">
+                                <v-text-field v-model="state.title"
+                                    :error-messages="v$.title.$errors.map((e: any) => e.$message)" label="Product title"
+                                    class="mb-2" placeholder="Insert the title of the product" variant="outlined"
+                                    @input="v$.title.$touch" @blur="v$.title.$touch" required />
+                                <v-text-field v-model="state.description"
+                                    :error-messages="v$.description.$errors.map((e: any) => e.$message)"
+                                    label="Product description" class="mb-2"
+                                    placeholder="Insert the description of the product" variant="outlined"
+                                    @input="v$.description.$touch" @blur="v$.description.$touch" required />
+                            </div>
+                            <div class="grid md:grid-cols-2 sm:grid-cols-1 gap-1 md:gap-3 mb-6">
+                                <v-text-field v-model="state.discountPercentage" type="number" suffix="%"
+                                    :error-messages="v$.discountPercentage.$errors.map((e: any) => e.$message)"
+                                    label="Discount percentage" class="mb-2"
+                                    placeholder="Insert the discount percentage of the product" variant="outlined"
+                                    @input="v$.discountPercentage.$touch" @blur="v$.discountPercentage.$touch"
+                                    required />
+                                <v-text-field v-model="state.price" type="number" prefix="$"
+                                    :error-messages="v$.price.$errors.map((e: any) => e.$message)" label="Product price"
+                                    class="mb-2" placeholder="Insert the price of the product" variant="outlined"
+                                    @input="v$.price.$touch" @blur="v$.price.$touch" required />
+                            </div>
                             <div class="d-flex flex-row justify-end gap-3 flex-wrap">
                                 <v-btn text="Reset fields" @click="resetFormState" :prepend-icon="mdiRestore"
                                     :disabled="loading" />
-                                <v-btn color="success"
-                                    :text="operationType === 'edit' ? 'Salva le modifiche' : 'Insert product'"
+                                <v-btn color="success" :text="operationType === 'edit' ? 'Edit' : 'Insert'"
                                     @click="() => { operationType === 'edit' ? handleEditElement() : handleCreateElement() }"
                                     :prepend-icon="operationType === 'edit' ? mdiPencil : mdiPlus" :loading="loading" />
                             </div>
@@ -187,6 +194,11 @@ const formTitle = computed<string>(
             ? 'Edit this product'
             : 'Are you sure you want to delete this product?'
 );
+const formDescription = computed<string>(
+    () => operationType.value === 'create'
+        ? 'Fill the form below with the requested informations.'
+        : 'Edit the informations about this product.'
+);
 
 const product = ref<Product | null>(null);
 const loading = ref<boolean>(false);
@@ -250,6 +262,9 @@ const openDialog = (operation: Operation, productId: number | null = null) => {
 
     if (productId) {
         product.value = products.value.find(p => p.id === productId) ?? null;
+        let productWithoutId = { ...product.value };
+        delete productWithoutId.id;
+        state.value = { ...(productWithoutId as ProductFormState) };
     } else {
         product.value = null;
     }
