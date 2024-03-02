@@ -25,9 +25,27 @@ import { useVuelidate } from '@vuelidate/core';
 import { helpers, required } from '@vuelidate/validators';
 import axios from 'axios';
 
+const { t } = useI18n();
+
+const seoMeta = computed(() => {
+  return {
+    title: `${t('seo.login.title')} - ${t('seo.brandName')}`,
+    description: `${t('seo.login.description')} - ${t('seo.brandName')}`
+  }
+});
+
 definePageMeta({
   layout: 'default',
   middleware: 'guest'
+});
+
+useSeoMeta({
+  title: () => seoMeta.value.title,
+  ogTitle: () => seoMeta.value.title,
+  description: () => seoMeta.value.description,
+  ogDescription: () => seoMeta.value.description,
+  ogImage: '/preview.png',
+  twitterCard: 'summary_large_image',
 });
 
 const store = useStore();

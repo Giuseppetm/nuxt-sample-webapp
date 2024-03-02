@@ -43,14 +43,14 @@
                 </template>
 
                 <template v-slot:item.discountPercentage="{ item }">
-                    <v-chip size="small">
+                    <v-chip color="secondary" size="small" variant="outlined">
                         {{ item.discountPercentage }} %
                     </v-chip>
 
                 </template>
 
                 <template v-slot:item.price="{ item }">
-                    <v-chip color="green">
+                    <v-chip color="green" size="small">
                         {{ item.price }} $
                     </v-chip>
                 </template>
@@ -206,7 +206,10 @@ const rules = {
         minValue: helpers.withMessage("Discount percentage must be between 0 and 100.", minValue(0)),
         maxValue: helpers.withMessage("Discount percentage must be between 0 and 100.", maxValue(100))
     },
-    price: { required: helpers.withMessage("Price is required.", required) },
+    price: { 
+        required: helpers.withMessage("Price is required.", required),
+        minValue: helpers.withMessage("Price must be greater than 0.", minValue(0)),
+    },
     rating: {
         required: helpers.withMessage("Rating is required.", required),
         minValue: helpers.withMessage("Rating must be between 1 and 5.", minValue(1)),

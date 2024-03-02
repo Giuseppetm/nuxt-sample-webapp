@@ -24,18 +24,22 @@ b {
 }
 
 h1 {
-    font-size: clamp(56px, 6vw + 2.5rem, 114px);
-    line-height: 90px;
+    font-size: 46px;
     font-weight: 600;
 
+    @screen sm {
+        font-size: 56px;
+    }
+
     @screen md {
-        line-height: 120px;
+        font-size: clamp(56px, 6vw + 2.5rem, 114px);
+        line-height: clamp(56px, 6vw + 3.5rem, 128px);
     }
 }
 
 h2 {
-    font-weight: 600;
     font-size: 24px;
+    font-weight: 600;
 
     @screen md {
         font-size: 40px;

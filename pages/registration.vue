@@ -10,11 +10,12 @@
             <form class="mb-6">
                 <div class="grid grid-cols-2 gap-3">
                     <v-text-field v-model="state.name" :error-messages="v$.name.$errors.map((e: any) => e.$message)"
-                        label="Name" class="mb-2" placeholder="Insert your name" variant="outlined" @input="v$.name.$touch"
-                        @blur="v$.name.$touch" required />
-                    <v-text-field v-model="state.surname" :error-messages="v$.surname.$errors.map((e: any) => e.$message)"
-                        label="Surname" class="mb-2" placeholder="Insert your surname" variant="outlined"
-                        @input="v$.surname.$touch" @blur="v$.surname.$touch" required />
+                        label="Name" class="mb-2" placeholder="Insert your name" variant="outlined"
+                        @input="v$.name.$touch" @blur="v$.name.$touch" required />
+                    <v-text-field v-model="state.surname"
+                        :error-messages="v$.surname.$errors.map((e: any) => e.$message)" label="Surname" class="mb-2"
+                        placeholder="Insert your surname" variant="outlined" @input="v$.surname.$touch"
+                        @blur="v$.surname.$touch" required />
                 </div>
                 <div class="grid grid-cols-3 gap-3">
                     <v-text-field v-model="state.email" :error-messages="v$.email.$errors.map((e: any) => e.$message)"
@@ -25,11 +26,12 @@
                         placeholder="Insert your password" variant="outlined" @input="v$.password.$touch"
                         @blur="v$.password.$touch" required />
                     <v-text-field v-model="state.confirmPassword" type="password"
-                        :error-messages="v$.confirmPassword.$errors.map((e: any) => e.$message)" label="Confirm password"
-                        placeholder="Confirm your password" variant="outlined" @input="v$.confirmPassword.$touch"
-                        @blur="v$.confirmPassword.$touch" required />
+                        :error-messages="v$.confirmPassword.$errors.map((e: any) => e.$message)"
+                        label="Confirm password" placeholder="Confirm your password" variant="outlined"
+                        @input="v$.confirmPassword.$touch" @blur="v$.confirmPassword.$touch" required />
                 </div>
-                <v-btn color="primary" block text="Register" class="mt-2" @click="handleRegistration" :loading="loading" />
+                <v-btn color="primary" block text="Register" class="mt-2" @click="handleRegistration"
+                    :loading="loading" />
             </form>
             <span class="text-secondary">
                 If you already have an account
@@ -43,9 +45,27 @@
 import { useVuelidate } from '@vuelidate/core';
 import { email, helpers, required, sameAs } from '@vuelidate/validators';
 
+const { t } = useI18n();
+
+const seoMeta = computed(() => {
+    return {
+        title: `${t('seo.registration.title')} - ${t('seo.brandName')}`,
+        description: `${t('seo.registration.description')} - ${t('seo.brandName')}`
+    }
+});
+
 definePageMeta({
     layout: 'default',
     middleware: 'guest'
+});
+
+useSeoMeta({
+    title: () => seoMeta.value.title,
+    ogTitle: () => seoMeta.value.title,
+    description: () => seoMeta.value.description,
+    ogDescription: () => seoMeta.value.description,
+    ogImage: '/preview.png',
+    twitterCard: 'summary_large_image',
 });
 
 interface FormState {
@@ -95,7 +115,7 @@ const handleRegistration = () => {
             loading.value = true;
 
             // Mockup, dummyjson has no register API
-            setTimeout(async() => {
+            setTimeout(async () => {
                 loading.value = false;
                 await navigateTo('/login');
             }, 1500);

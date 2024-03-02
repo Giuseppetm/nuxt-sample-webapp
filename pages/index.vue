@@ -11,8 +11,26 @@
 </template>
 
 <script setup lang="ts">
+const { t } = useI18n();
+
+const seoMeta = computed(() => {
+    return {
+        title: `${t('seo.homepage.title')} - ${t('seo.brandName')}`,
+        description: `${t('seo.homepage.description')} - ${t('seo.brandName')}`
+    }
+});
+
 definePageMeta({
     layout: 'default',
     middleware: 'auth'
+});
+
+useSeoMeta({
+    title: () => seoMeta.value.title,
+    ogTitle: () => seoMeta.value.title,
+    description: () => seoMeta.value.description,
+    ogDescription: () => seoMeta.value.description,
+    ogImage: '/preview.png',
+    twitterCard: 'summary_large_image',
 });
 </script>
