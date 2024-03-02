@@ -56,7 +56,8 @@
                 </template>
 
                 <template v-slot:item.rating="{ item }">
-                    <v-rating :model-value="item.rating" color="orange-darken-2" density="compact" size="small" readonly />
+                    <v-rating :model-value="item.rating" color="orange-darken-2" density="compact" size="small"
+                        readonly />
                 </template>
 
                 <template v-slot:item.actions="{ item }">
@@ -67,6 +68,7 @@
                         @click="openDialog('delete', item.id)" />
                 </template>
             </v-data-table>
+
             <template v-else-if="error">
                 An error has occurred, please reload the page.
             </template>
@@ -93,8 +95,9 @@
                                 @input="v$.title.$touch" @blur="v$.title.$touch" required />
                             <v-text-field v-model="state.description"
                                 :error-messages="v$.description.$errors.map((e: any) => e.$message)"
-                                label="Product description" class="mb-2" placeholder="Insert the description of the product"
-                                variant="outlined" @input="v$.description.$touch" @blur="v$.description.$touch" required />
+                                label="Product description" class="mb-2"
+                                placeholder="Insert the description of the product" variant="outlined"
+                                @input="v$.description.$touch" @blur="v$.description.$touch" required />
                             <v-text-field v-model="state.discountPercentage" type="number" suffix="%"
                                 :error-messages="v$.discountPercentage.$errors.map((e: any) => e.$message)"
                                 label="Discount percentage" class="mb-2"
@@ -106,8 +109,8 @@
                                 @input="v$.price.$touch" @blur="v$.price.$touch" required />
                             <div class="d-flex flex-col justify-center align-center gap-3 mb-8">
                                 <v-label text="Product rating" class="d-block" />
-                                <v-rating v-model="state.rating" :item-labels="['1', '', '', '', '5']" hover size="large" 
-                                    color="orange" label="Product rating" placeholder="Insert the rating of the product" required />
+                                <v-rating v-model="state.rating" :item-labels="['1', '', '', '', '5']" hover
+                                    size="large" color="orange" required />
                                 <span class="text-red-darken-4">
                                     {{ v$.rating.$errors.length > 0 ? v$.rating.$errors.map((e: any) => e.$message).toString() : '' }}
                                 </span>
@@ -115,7 +118,7 @@
                             <div class="d-flex flex-row justify-end">
                                 <v-btn type="primary" color="success"
                                     :text="operationType === 'edit' ? 'Salva le modifiche' : 'Create the product'"
-                                    @click="() => { operationType === 'edit' ? handleEditElement() : handleCreateElement() }"
+                                    @click="() => { operationType === 'edit' ? handleEditElement : handleCreateElement }"
                                     :prepend-icon="operationType === 'edit' ? mdiPencil : mdiPlus" :loading="loading" />
                             </div>
                         </form>
@@ -128,7 +131,8 @@
 
                         <div class="d-flex flex-row gap-4 justify-center items-center">
                             <v-btn variant="outlined" text="Cancel" :prepend-icon="mdiClose" @click="dialog = false;" />
-                            <v-btn color="error" text="Delete" :prepend-icon="mdiTrashCan" @click="handleDeleteElement()" :loading="loading" />
+                            <v-btn color="error" text="Delete" :prepend-icon="mdiTrashCan"
+                                @click="handleDeleteElement()" :loading="loading" />
                         </div>
                     </template>
                 </v-card-text>
@@ -206,7 +210,7 @@ const rules = {
         minValue: helpers.withMessage("Discount percentage must be between 0 and 100.", minValue(0)),
         maxValue: helpers.withMessage("Discount percentage must be between 0 and 100.", maxValue(100))
     },
-    price: { 
+    price: {
         required: helpers.withMessage("Price is required.", required),
         minValue: helpers.withMessage("Price must be greater than 0.", minValue(0)),
     },
@@ -220,16 +224,16 @@ const rules = {
 interface ProductFormState {
     title: string,
     description: string,
-    discountPercentage: number | null,
-    price: number | null,
-    rating: number | undefined
+    discountPercentage?: number,
+    price?: number,
+    rating?: number
 };
 
 const initialState = ref<ProductFormState>({
     title: '',
     description: '',
-    discountPercentage: null,
-    price: null,
+    discountPercentage: undefined,
+    price: undefined,
     rating: undefined
 });
 
@@ -243,14 +247,14 @@ watch(
         state.value = {
             title: newValue?.title ?? '',
             description: newValue?.description ?? '',
-            discountPercentage: newValue?.discountPercentage ?? null,
-            price: newValue?.price ?? null,
-            rating: newValue?.rating ?? undefined
+            discountPercentage: newValue?.discountPercentage,
+            price: newValue?.price,
+            rating: newValue?.rating
         }
     }
 );
 
-const v$ = useVuelidate(rules, state);
+const v$ = useVuelidate<ProductFormState>(rules, state);
 
 const resetFormState = () => {
     state.value = { ...initialState.value };
@@ -274,7 +278,7 @@ const handleCreateElement = () => {
     v$.value.$validate().then(async (res) => {
         if (res) {
             loading.value = true;
-            
+
             try {
                 const response = await axios.post(`${runtimeConfig.public.apiBase}/products/add`, state.value);
                 data.value.unshift({ ...state.value, id: response.data.id });
@@ -312,7 +316,7 @@ const handleEditElement = () => {
     });
 };
 
-const handleDeleteElement = async() => {
+const handleDeleteElement = async () => {
     loading.value = true;
 
     try {
