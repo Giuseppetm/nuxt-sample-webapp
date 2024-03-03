@@ -1,5 +1,5 @@
 {
-  "name": "iliad-webapp",
+  "name": "nuxtjs-sample-app",
   "private": true,
   "type": "module",
   "scripts": {
