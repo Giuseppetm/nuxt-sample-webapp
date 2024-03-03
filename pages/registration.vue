@@ -21,8 +21,8 @@
                 </div>
                 <div class="grid md:grid-cols-3 sm:grid-cols-1 gap-1 md:gap-3">
                     <v-text-field v-model="state.email" :error-messages="v$.email.$errors.map((e: any) => e.$message)"
-                        :label="t('registration.form.password.value')" class="mb-1 md:mb-2"
-                        :placeholder="t('registration.form.password.placeholder')" variant="outlined"
+                        :label="t('registration.form.email.value')" class="mb-1 md:mb-2"
+                        :placeholder="t('registration.form.email.placeholder')" variant="outlined"
                         @input="v$.email.$touch" @blur="v$.email.$touch" required />
                     <v-text-field v-model="state.password" type="password"
                         :error-messages="v$.password.$errors.map((e: any) => e.$message)"
@@ -40,7 +40,8 @@
             </form>
             <span class="text-secondary">
                 {{ t('registration.login.p1') }}
-                <NuxtLink class="text-primary" to="/login">{{ t('registration.login.p2') }}</NuxtLink> {{ t('registration.login.p3') }}.
+                <NuxtLink class="text-primary" to="/login">{{ t('registration.login.p2') }}</NuxtLink> {{
+                t('registration.login.p3') }}.
             </span>
         </div>
     </section>

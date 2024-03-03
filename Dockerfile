@@ -1,10 +1,29 @@
-FROM node:18
+ARG NODE_VERSION=18.14.2
 
-RUN mkdir -p /usr/src/nuxt-app
-WORKDIR /usr/src/nuxt-app
+FROM node:${NODE_VERSION}-slim as base
 
-COPY . /usr/src/nuxt-app/
+ARG PORT=3000
 
-RUN npm install
+ENV NODE_ENV=production
 
-CMD ["npm", "run", "dev"]
+WORKDIR /src
+
+# Build
+FROM base as build
+
+COPY --link package.json package-lock.json ./
+RUN npm install --production=false
+
+COPY --link . .
+
+RUN npm run build
+RUN npm prune
+
+# Run
+FROM base
+
+ENV PORT=$PORT
+
+COPY --from=build /src/.output /src/.output
+
+CMD [ "node", ".output/server/index.mjs" ]
