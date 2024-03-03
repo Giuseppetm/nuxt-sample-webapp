@@ -17,7 +17,7 @@
 
     <footer>
         <div :class="{'container mx-auto my-10': true, 'text-end': store.isAuthenticated }">
-            <span class="text-secondary">Developed by <b>Giuseppe Del Campo</b></span>
+            <span class="text-secondary">{{ t('footer.madeBy') }} <b>{{ t('footer.author') }}</b></span>
         </div>
     </footer>
 </template>

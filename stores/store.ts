@@ -26,7 +26,7 @@ export const useStore = defineStore('store', {
             this.token = undefined;
             this.user = undefined;
         },
-        setDeliveryAddress(address: DeliveryAddress) {
+        setDeliveryAddress(address: Address) {
             this.deliveryAddress = address;
         }
     }

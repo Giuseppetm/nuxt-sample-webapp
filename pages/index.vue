@@ -1,8 +1,14 @@
 <template>
     <section class="homepage container mx-auto mt-10 md:mt-20 mb-5">
         <h1 class="mb-4 md:mb-12">
-            This is a simple web application with a few features.
+            {{ t('homepage.title') }}
         </h1>
+
+        <div class="mb-12">
+            <span class="description">
+                {{ t('homepage.description') }}
+            </span>
+        </div>
 
         <DataTable />
     </section>
@@ -34,3 +40,9 @@ useSeoMeta({
     twitterCard: 'summary_large_image',
 });
 </script>
+
+<style lang="scss" scoped>
+.description {
+    font-size: 24px;
+}
+</style>

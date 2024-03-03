@@ -8,38 +8,43 @@
       <v-card-text class="pb-10 pt-5">
         <div class="mb-10 text-center">
           <h2 class="mb-2">
-            Manage your delivery address
+            {{ t('header.deliveryAddress.title') }}
           </h2>
           <span v-if="!store.deliveryAddress">
-            You have not inserted a delivery address yet, compile the form below.
+            {{ t('header.deliveryAddress.description.new') }}
           </span>
           <span v-if="editMode">
-            Insert a new delivery address
+            {{ t('header.deliveryAddress.description.edit') }}
           </span>
         </div>
 
         <div v-if="!store.deliveryAddress || editMode">
           <form class="max-w-screen-xs m-auto">
-            <v-text-field v-model="state.city" :error-messages="v$.city.$errors.map((e: any) => e.$message)"
-              label="City" placeholder="Insert your city" variant="outlined" @input="v$.city.$touch"
-              @blur="v$.city.$touch" required />
+            <v-text-field v-model="state.city" class="mb-1 md:mb-2"
+              :error-messages="v$.city.$errors.map((e: any) => e.$message)"
+              :label="t('header.deliveryAddress.form.city.value')"
+              :placeholder="t('header.deliveryAddress.form.city.placeholder')" variant="outlined"
+              @input="v$.city.$touch" @blur="v$.city.$touch" required />
             <v-text-field v-model="state.postalCode" type="number"
-              :error-messages="v$.postalCode.$errors.map((e: any) => e.$message)" label="Postal code" class="mb-2"
-              placeholder="Insert the postal code of your city" variant="outlined" @input="v$.postalCode.$touch"
-              @blur="v$.postalCode.$touch" required />
+              :error-messages="v$.postalCode.$errors.map((e: any) => e.$message)"
+              :label="t('header.deliveryAddress.form.postalCode.value')" class="mb-1 md:mb-2"
+              :placeholder="t('header.deliveryAddress.form.postalCode.placeholder')" variant="outlined"
+              @input="v$.postalCode.$touch" @blur="v$.postalCode.$touch" required />
             <v-text-field v-model="state.address" :error-messages="v$.address.$errors.map((e: any) => e.$message)"
-              label="Address" placeholder="Insert your address" variant="outlined" @input="v$.address.$touch"
-              @blur="v$.address.$touch" required />
-            <v-textarea v-model="state.note" label="Notes (optional)" placeholder="Insert eventual notes"
-              variant="outlined" @input="v$.note.$touch" @blur="v$.note.$touch" required />
+              class="mb-1 md:mb-2" :label="t('header.deliveryAddress.form.address.value')"
+              :placeholder="t('header.deliveryAddress.form.address.placeholder')" variant="outlined"
+              @input="v$.address.$touch" @blur="v$.address.$touch" required />
+            <v-textarea v-model="state.note" :label="t('header.deliveryAddress.form.note.value')"
+              :placeholder="t('header.deliveryAddress.form.note.placeholder')" variant="outlined"
+              @input="v$.note.$touch" @blur="v$.note.$touch" required />
             <div class="d-flex justify-end">
-              <v-btn :prepend-icon="mdiCheck" color="success" text="Save address" @click="handleSave"
-                :loading="loading" />
+              <v-btn :prepend-icon="mdiCheck" color="primary" :text="t('header.deliveryAddress.saveButton')"
+                @click="handleSave" :loading="loading" />
             </div>
           </form>
         </div>
         <div v-else class="md:grid md:grid-cols-6 max-w-screen-xs m-auto">
-          <v-list lines="two" class="md:col-span-4 col-span-6">
+          <v-list lines="two" class="md:col-span-3 col-span-6">
             <v-list-item :title="state.city">
               <template v-slot:prepend>
                 <v-avatar color="orange">
@@ -53,8 +58,9 @@
               </template>
             </v-list-item>
           </v-list>
-          <div class="md:col-span-2 col-span-6 d-flex align-center justify-end">
-            <v-btn :prepend-icon="mdiPencil" text="Edit address" variant="text" @click="handleEdit" />
+          <div class="md:col-span-3 col-span-6 d-flex align-center justify-end">
+            <v-btn :prepend-icon="mdiPencil" :text="t('header.deliveryAddress.editButton')" color="primary"
+              @click="handleEdit" />
           </div>
         </div>
       </v-card-text>
@@ -68,6 +74,7 @@ import { useVuelidate } from '@vuelidate/core';
 import { helpers, minValue, required } from '@vuelidate/validators';
 import axios from 'axios';
 
+const { t } = useI18n();
 const store = useStore();
 const runtimeConfig = useRuntimeConfig();
 
@@ -79,11 +86,11 @@ interface AddressFormState {
 };
 
 const rules = {
-  city: { required: helpers.withMessage("Address is required.", required) },
-  address: { required: helpers.withMessage("Address is required.", required) },
+  city: { required: helpers.withMessage(t('header.deliveryAddress.form.city.required'), required) },
+  address: { required: helpers.withMessage(t('header.deliveryAddress.form.address.required'), required) },
   postalCode: {
-    required: helpers.withMessage("Postal code is required.", required),
-    minValue: helpers.withMessage("Postal code can't be negative.", minValue(0)),
+    required: helpers.withMessage(t('header.deliveryAddress.form.postalCode.required'), required),
+    minValue: helpers.withMessage(t('header.deliveryAddress.form.postalCode.valid'), minValue(0)),
   },
   note: { required: false }
 };
@@ -122,10 +129,10 @@ const handleSave = () => {
         await axios.put(`${runtimeConfig.public.apiBase}/users/${store.user!.id}`, state);
 
         if (editMode) editMode.value = false;
-        store.setDeliveryAddress(state);
-        emitter.emit(EventType.SNACKBAR_MESSAGE, { message: 'Delivery address edited successfully.', type: Snackbar.SUCCESS });
+        store.setDeliveryAddress(state as Address);
+        emitter.emit(EventType.SNACKBAR_MESSAGE, { message: t('snackbar.success.deliveryAddress.edit'), type: Snackbar.SUCCESS });
       } catch (error) {
-        emitter.emit(EventType.SNACKBAR_MESSAGE, { message: 'An error has occurred while editing the delivery address.', type: Snackbar.ERROR });
+        emitter.emit(EventType.SNACKBAR_MESSAGE, { message: t('snackbar.error.deliveryAddress.edit'), type: Snackbar.ERROR });
         console.error('Error modifying delivery address:', error);
       } finally {
         loading.value = false;

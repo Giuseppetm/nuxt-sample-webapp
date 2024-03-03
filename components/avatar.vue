@@ -16,11 +16,11 @@
                     <v-divider class="my-2" />
 
                     <v-btn variant="text" block @click="openDeliveryAddresses">
-                        Delivery address
+                        {{ t('header.avatar.deliveryAddress') }}
                     </v-btn>
                     <v-divider class="my-1" />
                     <v-btn variant="text" block @click="handleLogout">
-                        Logout
+                        {{ t('header.avatar.logout') }}
                     </v-btn>
                 </div>
             </v-card-text>
@@ -31,6 +31,7 @@
 <script setup lang="ts">
 import { Snackbar } from '~/utils/types';
 
+const { t } = useI18n();
 const store = useStore();
 const token = useCookie('token');
 
@@ -42,9 +43,14 @@ const openDeliveryAddresses = () => {
 };
 
 const handleLogout = () => {
-    token.value = null;
-    emitter.emit(EventType.SNACKBAR_MESSAGE, { message: 'Logout successfully.', type: Snackbar.SUCCESS });
-    store.logout();
-    navigateTo('/login');
+    try {
+        token.value = null;
+        store.logout();
+        navigateTo('/login');
+        emitter.emit(EventType.SNACKBAR_MESSAGE, { message: t('snackbar.success.logout'), type: Snackbar.SUCCESS });
+    } catch(error) {
+        emitter.emit(EventType.SNACKBAR_MESSAGE, { message: t('snackbar.error.logout'), type: Snackbar.ERROR });
+        console.error('Error while logout:', error);
+    }
 };
 </script>

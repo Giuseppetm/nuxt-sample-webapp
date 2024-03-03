@@ -19,7 +19,7 @@ const type = ref<string>('');
 const color = computed(() => {
     switch (type.value) {
         case Snackbar.SUCCESS:
-            return 'green';
+            return 'primary';
         case Snackbar.ERROR:
             return 'error';
         case Snackbar.STANDARD:

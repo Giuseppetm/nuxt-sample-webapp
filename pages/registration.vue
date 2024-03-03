@@ -2,7 +2,7 @@
     <section class="registration container mx-auto my-10 md:my-20">
         <div class="max-w-screen-lg mb-8 md:mb-20">
             <h1>
-                Create a <span class="text-tertiary">new account</span>.
+                {{ t('registration.title.p1') }} <span class="text-tertiary">{{ t('registration.title.p2') }}</span>.
             </h1>
         </div>
 
@@ -10,32 +10,37 @@
             <form class="mb-6">
                 <div class="grid md:grid-cols-2 sm:grid-cols-1 gap-1 md:gap-3">
                     <v-text-field v-model="state.name" :error-messages="v$.name.$errors.map((e: any) => e.$message)"
-                        label="Name" class="mb-1 md:mb-2" placeholder="Insert your name" variant="outlined"
+                        :label="t('registration.form.name.value') " class="mb-1 md:mb-2"
+                        :placeholder="t('registration.form.name.placeholder')" variant="outlined"
                         @input="v$.name.$touch" @blur="v$.name.$touch" required />
                     <v-text-field v-model="state.surname"
-                        :error-messages="v$.surname.$errors.map((e: any) => e.$message)" label="Surname"
-                        class="mb-1 md:mb-2" placeholder="Insert your surname" variant="outlined"
+                        :error-messages="v$.surname.$errors.map((e: any) => e.$message)"
+                        :label="t('registration.form.surname.value')" class="mb-1 md:mb-2"
+                        :placeholder="t('registration.form.surname.placeholder')" variant="outlined"
                         @input="v$.surname.$touch" @blur="v$.surname.$touch" required />
                 </div>
                 <div class="grid md:grid-cols-3 sm:grid-cols-1 gap-1 md:gap-3">
                     <v-text-field v-model="state.email" :error-messages="v$.email.$errors.map((e: any) => e.$message)"
-                        label="E-mail" class="mb-1 md:mb-2" placeholder="Insert your e-mail" variant="outlined"
+                        :label="t('registration.form.password.value')" class="mb-1 md:mb-2"
+                        :placeholder="t('registration.form.password.placeholder')" variant="outlined"
                         @input="v$.email.$touch" @blur="v$.email.$touch" required />
                     <v-text-field v-model="state.password" type="password"
-                        :error-messages="v$.password.$errors.map((e: any) => e.$message)" label="Password"
-                        class="mb-1 md:mb-2" placeholder="Insert your password" variant="outlined"
+                        :error-messages="v$.password.$errors.map((e: any) => e.$message)"
+                        :label="t('registration.form.password.value')" class="mb-1 md:mb-2"
+                        :placeholder="t('registration.form.password.placeholder')" variant="outlined"
                         @input="v$.password.$touch" @blur="v$.password.$touch" required />
                     <v-text-field v-model="state.confirmPassword" type="password" class="mb-1 md:mb-2"
                         :error-messages="v$.confirmPassword.$errors.map((e: any) => e.$message)"
-                        label="Confirm password" placeholder="Confirm your password" variant="outlined"
+                        :label="t('registration.form.confirmPassword.value')"
+                        :placeholder="t('registration.form.confirmPassword.placeholder')" variant="outlined"
                         @input="v$.confirmPassword.$touch" @blur="v$.confirmPassword.$touch" required />
                 </div>
-                <v-btn color="primary" block text="Register" class="mt-1 md:mt-2" @click="handleRegistration"
-                    :loading="loading" />
+                <v-btn color="primary" block :text="t('registration.button')" class="mt-1 md:mt-2"
+                    @click="handleRegistration" :loading="loading" />
             </form>
             <span class="text-secondary">
-                If you already have an account
-                <NuxtLink class="text-primary" to="/login">click here</NuxtLink> to login.
+                {{ t('registration.login.p1') }}
+                <NuxtLink class="text-primary" to="/login">{{ t('registration.login.p2') }}</NuxtLink> {{ t('registration.login.p3') }}.
             </span>
         </div>
     </section>
@@ -92,16 +97,16 @@ const state = reactive<FormState>({
 });
 
 const rules = {
-    name: { required: helpers.withMessage("Name is required.", required) },
-    surname: { required: helpers.withMessage("Surname is required.", required) },
+    name: { required: helpers.withMessage(t('registration.form.name.required'), required) },
+    surname: { required: helpers.withMessage(t('registration.form.surname.required'), required) },
     email: {
-        required: helpers.withMessage("E-mail is required.", required),
-        email: helpers.withMessage("E-mail is not valid.", email)
+        required: helpers.withMessage(t('registration.form.email.required'), required),
+        email: helpers.withMessage(t('registration.form.email.valid'), email)
     },
-    password: { required: helpers.withMessage("Password is required.", required) },
+    password: { required: helpers.withMessage(t('registration.form.password.required'), required) },
     confirmPassword: {
-        required: helpers.withMessage("You must confirm your password.", required),
-        sameAs: helpers.withMessage("Confirmation password does not match the password.", sameAs(computed(() => state.password)))
+        required: helpers.withMessage(t('registration.form.confirmPassword.required'), required),
+        sameAs: helpers.withMessage(t('registration.form.confirmPassword.valid'), sameAs(computed(() => state.password)))
     },
 };
 
@@ -117,9 +122,9 @@ const handleRegistration = () => {
             try {
                 await axios.post(`${runtimeConfig.public.apiBase}/users/add`, state);
                 await navigateTo('/login');
-                emitter.emit(EventType.SNACKBAR_MESSAGE, { message: 'User registered successfully.', type: Snackbar.SUCCESS });
+                emitter.emit(EventType.SNACKBAR_MESSAGE, { message: t('snackbar.success.registration'), type: Snackbar.SUCCESS });
             } catch (error) {
-                emitter.emit(EventType.SNACKBAR_MESSAGE, { message: 'An error has occurred during the registration of the user.', type: Snackbar.ERROR });
+                emitter.emit(EventType.SNACKBAR_MESSAGE, { message: t('snackbar.error.registration'), type: Snackbar.ERROR });
                 console.error('Error creating a new user:', error);
             } finally {
                 loading.value = false;
