@@ -32,8 +32,19 @@ export default defineNuxtConfig({
     },
   },
   i18n: {
-    locales: ['it', 'en'],
-    defaultLocale: 'it',
+    locales: [
+      {
+        code: 'en',
+        iso: 'en-US'
+      },
+      {
+        code: 'it',
+        iso: 'it-IT'
+      }
+    ],
+    strategy: 'no_prefix',
+    baseUrl: 'https://nuxt-sample.netlify.app',
+    defaultLocale: 'en',
   },
   devtools: { 
     enabled: true 

@@ -17,7 +17,9 @@
 
     <footer>
         <div :class="{'container mx-auto my-10': true, 'text-end': store.isAuthenticated }">
-            <span class="text-secondary">{{ t('footer.madeBy') }} <b>{{ t('footer.author') }}</b></span>
+            <span class="text-secondary">
+                {{ t('footer.madeBy') }} <b class="text-primary"><NuxtLink href='https://github.com/Giuseppetm'>{{ t('footer.author') }}</NuxtLink></b>
+            </span>
         </div>
     </footer>
 </template>
