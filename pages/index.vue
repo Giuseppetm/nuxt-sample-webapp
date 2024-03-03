@@ -1,8 +1,10 @@
 <template>
     <section class="homepage container mx-auto mt-10 md:mt-20 mb-5">
-        <h1 class="mb-4 md:mb-12">
-            {{ t('homepage.title') }}
-        </h1>
+        <div class="mb-12">
+            <h1>
+                {{ t('homepage.title') }}
+            </h1>
+        </div>
 
         <div class="mb-12">
             <span class="description">

@@ -308,7 +308,7 @@ export default defineI18nConfig(() => ({
             },
             homepage: {
                 title: 'This is a simple web application with some functionality.',
-                description: 'There is a product table at the bottom that allows you to perform CRUD operations.',
+                description: 'Down below there is a product table that allows you to perform CRUD operations.',
                 dataTable: {
                     search: 'Search for a product',
                     addProduct: 'Add a product',
@@ -333,6 +333,13 @@ export default defineI18nConfig(() => ({
                             title: 'Edit product',
                             description: 'Edit the information about this product',
                             button: 'Edit'
+                        },
+                        delete: {
+                            title: 'Delete the product?',
+                            button: {
+                                cancel: 'Cancel',
+                                delete: 'Delete'
+                            }
                         },
                         form: {
                             title: {
