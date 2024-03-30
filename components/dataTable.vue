@@ -175,7 +175,7 @@ const { data, pending, error } = useAsyncData('products', async () => {
 }, { watch: [debouncedSearch] });
 
 const products = computed<Array<Product>>(() => data.value ?? []);
-const headers = ref([
+const headers = computed(() => [
     { title: t('homepage.dataTable.headers.id'), key: 'id' },
     { title: t('homepage.dataTable.headers.title'), key: 'title' },
     { title: t('homepage.dataTable.headers.description'), key: 'description' },
